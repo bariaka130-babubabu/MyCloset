@@ -12,6 +12,7 @@ public class Cloth {
 
 	private Integer id;
 	private String name;
+	//プルダウンで1つ選ぶ＝String
 	private String category;
 	//colorは一つだけ選ぶプルダウンなのでStringで
 	private String color;
@@ -23,6 +24,7 @@ public class Cloth {
 	private String imageName;
 
 	//季節は「○か×か（true/false）」で判定できるようにbooleanにします
+	//組み合わせ16通り
 	private boolean isSpring;
 	private boolean isSummer;
 	private boolean isAutumn;
@@ -33,4 +35,5 @@ public class Cloth {
 /*「まだ何も選んでない状態（null）」にしたいならラッパークラスのBoolean
 使う。今回は選んでない＝その季節は着れない＝falseなのでboolean使う
 チェックした「春」「夏」 ➔ true に書き換わってDBへ！
-触らなかった「秋」「冬」 ➔ 最初からの false のままDBへ*/
+触らなかった「秋」「冬」 ➔ 最初からの false のままDBへ
+SELECT * FROM item WHERE is_spring = 1 AND is_autumn = 1;*/
