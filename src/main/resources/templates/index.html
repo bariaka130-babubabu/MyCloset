@@ -5,16 +5,21 @@
 <title>トップページ</title>
 </head>
 <body>
-
+	<header>
 	<h1>MyCloset</h1>
-	
+<!--	<nav>タグ＝ページ移動のための大事なボタン-->
+	<nav>
+		<button type="button">お気に入りリスト</button>
+		<button type="button">売りたいリスト</button>
+	</nav>
+	</header>
 <!--1つ目の大きな div 箱：「お洋服一覧」というエリア全体を包む箱
 	2つ目の小さな div 箱（th:each がついている方）： 服1着分のデータ（画像など）
 	を1つのセットとして包む箱。服が3着ある＝この小さな箱が3個自動で出来る。-->
 	
 	<div>
 		<h2>お洋服一覧</h2>
-		<div th:each="cloth:${clothes}">
+		<div th:each="cloth : ${clothes}">
 <!--	max-width（最大の横幅）-->
 <!--@{/upload/...} ：「/upload/ というフォルダのURLを作ってね」-->
 			<img th:src="@{/upload/{name}(name=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
