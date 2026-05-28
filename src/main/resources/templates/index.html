@@ -22,6 +22,7 @@
 		<div th:each="cloth : ${clothes}">
 <!--	max-width（最大の横幅）-->
 <!--@{/upload/...} ：「/upload/ というフォルダのURLを作ってね」-->
+<!--${cloth.imageName}=DBのimage_name受け取れる-->
 			<img th:src="@{/upload/{name}(name=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
 		</div>
 	</div>
@@ -31,6 +32,7 @@
 	 <div>
 	 	<h2>新しいお洋服を登録する</h2>
 <!--enctype="multipart/form-data" =文字だけじゃなくて画像ファイルも一緒に送る合図-->
+<!--フォーム送信したときに /add というURLへ送る-->
 		<form action="/add" method="post" enctype="multipart/form-data">
 			<p>
 				<input type="file" name="clothImage" accept="image/*"required />
