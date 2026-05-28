@@ -22,6 +22,12 @@ public class Cloth {
 	//boolean（小文字）にすると、最初から「false（☆）」が入る扱いやすい
 	private boolean isFavorite;
 	private String imageName;
+	/*これが「setImageName」の正体！
+			public void setImageName(String imageName) {←
+	  	this.imageName = imageName;
+	}*/
+	//値をセットするメソッド（セッター）は、一方通行の命令だから結果のデータ（戻り値）は何も返さない。
+	//だから、Lombokが作るセッターはすべて例外なく void 型になる。
 
 	//季節は「○か×か（true/false）」で判定できるようにbooleanにします
 	//組み合わせ16通り
