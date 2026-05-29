@@ -22,19 +22,87 @@
 		<div th:each="cloth : ${clothes}">
 <!--	max-width（最大の横幅）-->
 <!--@{/upload/...} ：「/upload/ というフォルダのURLを作ってね」-->
+<!--@{  /URLの固定の部分/ {好きなあだ名} ( 好きなあだ名 = ${Javaの変数} )  }-->
+<!--@{ ... } ：「今からURLを組み立てるよ！」の合図-->
+<!--/uploads/ ：ここは全員共通の固定の文字-->
+<!--{aaa} ：後から変数をはめ込むための「空箱」-->
+<!--(aaa=${cloth.imageName}) ：「空箱 aaa に、DBから取ってきたファイル名を入れてね」という指示-->
 <!--${cloth.imageName}=DBのimage_name受け取れる-->
-			<img th:src="@{/uploads/{name}(name=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
+			<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
 		</div>
 	</div>
 		
 	 <hr />
+<!--	 <div> タグは「ただの透明な箱」＝が麺大きくブロック分けしたいとき使う
+	画面のレイアウトを「左側エリア」と「右側エリア」に分けたいときやパーツをグループごとにガバッとまとめて四角い箱に入れたいときに使います-->
 	 
 	 <div>
 	 	<h2>新しいお洋服を登録する</h2>
 <!--enctype="multipart/form-data" =文字だけじゃなくて画像ファイルも一緒に送る合図-->
 <!--フォーム送信したときに /add というURLへ送る-->
 		<form action="/add" method="post" enctype="multipart/form-data">
+<!--	labelタグで囲むことによって入力画面やチェックボックス枠と文字を結び付け、どっちをクリックしても
+		反応するようになる＝人間にとって「押しやすい親切な画面」にするために、文字とボタンをグループ化-->
+			<p><label>服の名前：</label>
+				<input type="text" name="name" placeholder="例）無地白Tシャツ"/>
+			</p>
+<!--		pタグ内は改行されない・<p> タグは「文章の段落」前後に少し広めの空白が自動で入る-->
 			<p>
+				<label>カテゴリ</label>
+				<select name="category">
+					<option value="tops">トップス</option>
+					<option value="pants">パンツ</option>
+					<option value="skirt">スカート</option>
+					<option value="onepiece">ワンピース</option>
+					<option value="outer">アウター</option>
+					<option value="shoes">シューズ</option>
+					<option value="bag">バッグ</option>
+					<option value="others">その他</option>
+				</select>
+			</p>
+			<p>
+				<label>カラー：</label>
+				<select name="color">
+					<option value="white">ホワイト</option>
+					<option value="beige">ベージュ</option>
+					<option value="black">ブラック</option>
+					<option value="gray">グレー</option>
+					<option value="navy">ネイビー</option>
+					<option value="red">レッド</option>
+					<option value="pink">ピンク</option>
+					<option value="orange">オレンジ</option>
+					<option value="yellow">イエロー</option>
+					<option value="green">グリーン</option>
+					<option value="purple">パープル</option>
+					<option value="blue">ブルー</option>
+					<option value="brown">ブラウン</option>
+				</select>
+			</p>
+			<p>
+				<label>ブランド：</label>
+				<input type="text" name="brand" placeholder="例）UNIQLO"/>
+			</p>
+			<p>
+				<label>価格：</label>
+<!--				int priceだからここは数字のみ-->
+				<input type="number"id="clothPrice" name="price" value="0" min="0"/>円
+			</p>
+			
+			<p>
+				<label>
+					<input type="checkbox" name="isFavorite" value="true"/>★お気に入り登録
+				</label>
+			</p>
+			<p>
+				<label>着用季節：</label><br/>
+<!--				value=trueはチェック入ったらtrueで送られる-->
+				<label><input type="checkbox" name="isSpring" value="true" />春</label>
+				<label><input type="checkbox" name="isSummer" value="true" />夏</label>
+				<label><input type="checkbox" name="isAutumn" value="true" />秋</label>
+				<label><input type="checkbox" name="isWinter" value="true" />冬</label>
+			</p>
+			<p>
+				<label>画像：</label>
 				<input type="file" name="clothImage" accept="image/*"required />
 			</p>
 	

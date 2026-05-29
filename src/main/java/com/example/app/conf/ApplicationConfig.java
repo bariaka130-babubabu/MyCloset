@@ -4,6 +4,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+//★「アップロードした画像を後からブラウザで
+//見られるようにするために絶対にセットで必要な設定」（マッピング）
+//Spring Bootに「/uploads/ というURLでアクセスされたら、
+//C:/Users/.../uploads/ の中身を見に行ってね」と教える設定を書く！！！。
+
 @Configuration // 1. これを設定クラスとしてSpringに認識させる
 // 2. WebMvcConfigurerを実装する=addResourceHandlers設定用メソッド使える
 //Spring Boot(Javaのフレームワーク)があらかじめ用意してくれているインターフェース
