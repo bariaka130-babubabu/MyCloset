@@ -15,7 +15,7 @@
 <insert id="add" parameterType="Cloth">
  insert into item(
  name,
- ctegory,
+ category,
  color,
  brand,
  price,
@@ -28,16 +28,16 @@
  )
  values(
  #{name},
- #{ctegory},
+ #{category},
  #{color},
  #{brand},
  #{price},
- #{is_favorite},
- #{image_name},
- #{is_spring},
- #{is_summer},
- #{is_autumn},
- #{is_winter},
+ #{isFavorite},
+ #{imageName},
+ #{isSpring},
+ #{isSummer},
+ #{isAutumn},
+ #{isWinter}
  )
 </insert>
 

@@ -23,7 +23,7 @@
 <!--	max-width（最大の横幅）-->
 <!--@{/upload/...} ：「/upload/ というフォルダのURLを作ってね」-->
 <!--${cloth.imageName}=DBのimage_name受け取れる-->
-			<img th:src="@{/upload/{name}(name=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
+			<img th:src="@{/uploads/{name}(name=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
 		</div>
 	</div>
 		
