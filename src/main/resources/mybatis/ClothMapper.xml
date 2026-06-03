@@ -41,5 +41,12 @@
  )
 </insert>
 
+<!--#{id}：Javaの引数 Integer id で受け取った数字（「5」など）が、
+自動的にここにスポッとあてはまります。-->
+<delete id="deleteById">
+ delete from item
+ where id = #{id}
+</delete>
+
 
 </mapper>

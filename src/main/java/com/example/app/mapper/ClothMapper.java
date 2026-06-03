@@ -16,8 +16,10 @@ public interface ClothMapper {
 	void add(Cloth cloth);
 
 	//登録した洋服を削除する機能
+	void deleteById(Integer id);
 
 	//カテゴリ別の検索機能
+	List<Cloth> findByCategory(String category);
 
 	//お気に入りリスト追加
 

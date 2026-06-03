@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +40,7 @@ public class ItemController {
 	}
 
 	//服の登録処理実行（フォームの送信ボタンが押されたらここに来る）
+
 	@PostMapping("/add") // URLは登録用の名前にする
 	//引数ClothにしたらClothクラスの内容全部受け取れる
 	public String addcloth(Cloth cloth,
@@ -64,16 +66,18 @@ public class ItemController {
 		try {
 			//4.元のファイル名取得(例:"my_shirt.jpg")あえて変数にする！
 			//→originalFilenameという短い変数にすることでわかりやすく早くしている
-			//getOriginalFilename():MultipartFileクラス＝「元のファイル名」を取り出す
+			//getOriginalFilename():MultipartFileクラスのメソッド＝「元のファイル名」を取り出す
 			String originalFilename = file.getOriginalFilename();
 			//5.★世界に1つだけのランダムな文字列（UUID）を生成して頭にくっつける
 			//結果: "550e8400-e29b-41d4-a716-446655440000_my_shirt.jpg" のようになる
-			//UUID=Javaが標準で持っているクラス
-			//ramdom.UUID():UUIDクラス＝Javaが暗号レベルの強力なID生成してくれる
-			//.to String():Javaのほぼすべてのオブジェクトが持ってる
-			//→「中身をただの文字列（String型）に変換して！」
+			//UUID=Javaが標準で持っているクラス,UUID.=UUIDクラスの～という意味
+			//ramdom.UUID():UUIDクラス＝Javaが暗号レベルの強力なID生成してくれる(UUID型オブジェクト)
+			//.to String():Javaのほぼすべてのオブジェクトが持ってるメソッド
+			//→「オブジェクトをただの文字列（String型）に変換して！」
 			String saveFilename = UUID.randomUUID().toString() + "_" + originalFilename;
 			//6.保存先(フォルダパス+新しいファイル名)の★Fileオブジェクトを作成＝File型
+			//Fole型オブジェクトにすることによってパソコンの中のファイルやフォルダの場所(住所)伝えてる
+
 			File destFile = new File(UPLOAD_DIR + saveFilename);
 			//7.【実務の優しさ】もし「C:/Users/zd2U08/uploads/」というフォルダが
 			//PCにまだ存在してなかったらプログラムが自動でフォルダを作成する
@@ -99,6 +103,21 @@ public class ItemController {
 		//★redirect:の後ろは(HTMLのファイル名)ではなく=コントローラーのURL
 		//ブラウザ更新ボタンによる二重投稿を防ぐためリダイレクト
 		return "redirect:/cloth";//④ 保存が終わったら一覧ページ（/cloth）に戻る
+	}
+
+	//登録した服の削除機能
+	//@PostMapping("/delete/{id}") の {id}
+	//=URLのどこから数字を抜き取ればいいかを教えるための指標（目印
+	@PostMapping("/delete/{id}")
+	//@PathVariable=@PostMappingの指標受けて実際のURLみてidとってくる
+	//Integer id =取ってきた数字をJavaの中で使えるように「変数の中に入れる」という命令機能
+	//によって、データがバケツに入る
+	//★だから、この1行は「3人1組のチーム」
+	public String deletecloth(@PathVariable("id") Integer id) {
+		//①mapperにidを渡してDBから削除
+		mapper.deleteById(id);
+		// ② 終わったらお洋服一覧ページへリダイレクト
+		return "redirect:/cloth";
 	}
 
 }
