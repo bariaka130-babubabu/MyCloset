@@ -41,12 +41,25 @@
  )
 </insert>
 
+
+<!--３.データ削除-->
 <!--#{id}：Javaの引数 Integer id で受け取った数字（「5」など）が、
-自動的にここにスポッとあてはまります。-->
+自動的にここにスポッとあてはまります。MyBatisでJavaの変数をSQLに組み込みたいとき=#{変数名}-->
 <delete id="deleteById">
  delete from item
  where id = #{id}
 </delete>
 
+<!--４.カテゴリー検索-->
+<!--parameterType=Java側から「このデータをSQLで使ってね」と送り込むときのデータの型
+=XMLの #{...} の中身に値を当てはめるために使う
+引数が文字列（String）なら parameterType="String"、
+クラス丸ごと渡すなら parameterType="Cloth" と書きます。-->
+<!--resultType=SQLの select 文を実行した結果、Javaのどの型()クラス)にデータを詰め込んでほしいかを指定するもの
+※データを消すだけの delete や、追加するだけの insert はデータを返さないため、resultType は不要-->
+<select  id="findByCategory" parameterType="String" resultType="Cloth">
+ select * from item
+ where category = #{category}
+</select>
 
 </mapper>
