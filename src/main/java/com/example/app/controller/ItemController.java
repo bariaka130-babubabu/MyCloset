@@ -1,7 +1,5 @@
 package com.example.app.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,24 +104,22 @@ public class ItemController {
 			@RequestParam("category") String category,
 			Model model) {
 
-		// 【テスト用①】画面（URL）から文字が届いたかチェック
-		System.out.println("★【Controller】画面から届いたカテゴリ: " + category);
-
-		// サービスを呼び出してリストを受け取る
-		List<Cloth> result = service.getClothesByCategory(category);
-
-		// 【テスト用②】サービスがDBから何着の服を拾ってきたかチェック
-		System.out.println("★【Service】DBから取得した服の数: " + result.size() + "着");
-		for (Cloth c : result) {
-			System.out.println("  -> 取得した服の名前: " + c.getName());
-		}
+		/*【テスト用①】画面（URL）から文字が届いたかチェック
+			System.out.println("★【Controller】画面から届いたカテゴリ: " + category);
+			// サービスを呼び出してリストを受け取る
+			List<Cloth> result = service.getClothesByCategory(category);
+		//【テスト用②】サービスがDBから何着の服を拾ってきたかチェック
+			System.out.println("★【Service】DBから取得した服の数: " + result.size() + "着");
+			for (Cloth c : result) {
+				System.out.println("  -> 取得した服の名前: " + c.getName());
+			}*/
 
 		//getClothesByCategoryメソッドの結果を"clothes"につめてhtmlへ渡す
-		//model.addAttribute(
-		//初期ページの"clothes"とは中身が(全データ,カテゴリ別データ)が違うが
-		//HTML側は"clothes"というデータが届いたらループで回す＝共通の仕組み
-		//→あえて同じ名前の"clothes"箱に入れる
-		//"clothes", service.getClothesByCategory(category));
+		model.addAttribute(
+				//初期ページの"clothes"とは中身が(全データ,カテゴリ別データ)が違うが
+				//HTML側は"clothes"というデータが届いたらループで回す＝共通の仕組み
+				//→あえて同じ名前の"clothes"箱に入れる
+				"clothes", service.getClothesByCategory(category));
 		return "search-result";
 
 	}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>検索結果一覧</title>
+</head>
+<body>
+	<header>
+		<h1>MyCloset - 検索結果</h1>
+<!--	nav =(ナビゲーション：ページ移動の案内所）-->
+		<nav>
+		<a th:href="@{/cloth}" class="back-btn">クローゼット一覧に戻る</a>			</a>
+		</nav>
+	</header>
+
+	<div>
+		<h2>見つかったお洋服</h2>
+<!--th:if="..."：条件が正しい(true)=この<div>全体を表示する-->
+<!--${#lists.isEmpty(clothes)}：clothes(服のリストデータ)が空(empty)かどうかをチェック-->
+<!--	#lists=Thymeleafが最初から用意してくれている(ユーティリティオブジェクト)-->
+<!--　　${}=model.addAttribute("clothes", ...)のclothes表示のため-->
+		<div th:if="${#lists.isEmpty(clothes)}">
+			<p>指定されたカテゴリのお洋服はまだ登録されていません。</p>
+		</div>
+<!-- th:unless="..."：th:ifの真逆で、条件が「成り立たない(false)」時表示-->
+<!--もし服のリストが空っぽではない（＝データが1件以上ある）なら、以下の処理をする」-->
+		<div th:unless="${#lists.isEmpty(clothes)}">
+<!--	th:each="個別名 : ${リスト名}"：javaでいうfor文（繰り返し処理-->
+			<div th:each="cloth : ${clothes}" style="margin-bottom: 20px;">
+<!--	ブラウザ（ChromeやSafariなど）に対して、「この画像が欲しければ、
+		このURL（住所）にアクセスして画像をとってきてね」と指示を出している-->
+			<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" alt="服の画像" style="max-width: 200px;" />
+				
+<!--	服の情報を表示する段落の開始です。-->
+			<p>
+				<strong th:text="${cloth.name}">服の名前</strong><br/>
+				
+				<span>カラー：</span><span th:text="${cloth.color}">色</span> /
+				<span>ブランド：</span><span th:text="${cloth.brand}">ブランド</span> / 
+				<span>価格：</span><span th:text="${cloth.price}">0</span>円
+				
+			</p>
+<!-- hr/：服と服の間に区切り線（横線）を引いています。-->
+			<hr/>	
+				
+		</div>
+		
+		
+		
+		</div>
+	
+	
+	
+	
+</body>
+</html>

@@ -51,6 +51,30 @@
 <!--	 <div> タグは「ただの透明な箱」＝が麺大きくブロック分けしたいとき使う
 	画面のレイアウトを「左側エリア」と「右側エリア」に分けたいときやパーツをグループごとにガバッとまとめて四角い箱に入れたいときに使います-->
 	 
+	<div>
+		<h2>お洋服をカテゴリで検索する</h2>
+		
+	<form action="/search" method="get">
+		<p>
+						<label>カテゴリ</label>
+						<select name="category">
+							<option value="tops">トップス</option>
+							<option value="pants">パンツ</option>
+							<option value="skirt">スカート</option>
+							<option value="onepiece">ワンピース</option>
+							<option value="outer">アウター</option>
+							<option value="shoes">シューズ</option>
+							<option value="bag">バッグ</option>
+							<option value="others">その他</option>
+						</select>
+					</p>
+		<button type="submit">検索</button>
+	</form>
+	</div>
+	
+	
+	
+	
 	 <div>
 	 	<h2>新しいお洋服を登録する</h2>
 <!--enctype="multipart/form-data" =文字だけじゃなくて画像ファイルも一緒に送る合図-->
@@ -99,7 +123,7 @@
 			</p>
 			<p>
 				<label>価格：</label>
-<!--				int priceだからここは数字のみ-->
+<!--	int priceだからここは数字のみ-->
 				<input type="number"id="clothPrice" name="price" value="0" min="0"/>円
 			</p>
 			
@@ -110,7 +134,7 @@
 			</p>
 			<p>
 				<label>着用季節：</label><br/>
-<!--				value=trueはチェック入ったらtrueで送られる-->
+<!--	value=trueはチェック入ったらtrueで送られる-->
 				<label><input type="checkbox" name="isSpring" value="true" />春</label>
 				<label><input type="checkbox" name="isSummer" value="true" />夏</label>
 				<label><input type="checkbox" name="isAutumn" value="true" />秋</label>
