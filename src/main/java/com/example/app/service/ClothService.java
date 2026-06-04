@@ -2,6 +2,7 @@ package com.example.app.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class ClothService {
 	//アップロードされた画像を保存するフォルダのパス
 	private final String UPLOAD_DIR = "C:/Users/zd2U08/uploads/";
 
-	//服の登録とファイル保存を行うビジネスロジック
+	//２：服の登録とファイル保存を行うビジネスロジック
 	//ここには「UUIDを作ってフォルダに保存する」という
 	//審査をクリアした後の具体的な処理（ロジック）だけを書く！
 
@@ -87,4 +88,15 @@ public class ClothService {
 
 	}
 
+	//４：カテゴリー検索のビジネスロジック
+	//ここにおすすめ順に並び替えや、在庫無い物表示しないなど色々なルール後から追加できる
+
+	//String category: 画面から送られてきた「tops」や「pants」などのカテゴリ名を受け取る
+	//topsなど文字列でデータ探すが見つかるのは服のリスト＝戻り値List<Cloth>
+	public List<Cloth> getClothesByCategory(String category) {
+		//プログラムは「右側(＝イコールの右側や,returnの後ろ)を先に計算・実行する」というルール
+		//届いたデータを、その瞬間に return がキャッチして、呼び出し元(コントローラー)に送り返す
+		return mapper.findByCategory(category);
+
+	}
 }

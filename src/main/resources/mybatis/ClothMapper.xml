@@ -26,6 +26,7 @@
  is_autumn,
  is_winter
  )
+<!-- values＝新しいデータを登録するとき、その中身（値）を指定する(insertとセットのこと多い)-->
  values(
  #{name},
  #{category},
@@ -55,6 +56,7 @@
 =XMLの #{...} の中身に値を当てはめるために使う
 引数が文字列（String）なら parameterType="String"、
 クラス丸ごと渡すなら parameterType="Cloth" と書きます。-->
+
 <!--resultType=SQLの select 文を実行した結果、Javaのどの型()クラス)にデータを詰め込んでほしいかを指定するもの
 ※データを消すだけの delete や、追加するだけの insert はデータを返さないため、resultType は不要-->
 <select  id="findByCategory" parameterType="String" resultType="Cloth">

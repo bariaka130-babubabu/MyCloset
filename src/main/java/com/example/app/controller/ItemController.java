@@ -27,7 +27,7 @@ public class ItemController {
 	        this.mapper = mapper;
 	    }を手書きで書く*/
 
-	//初期ページ表示
+	//１：初期ページ（服一覧）表示
 	@GetMapping("/cloth")
 	public String startPage(Model model) {
 		System.out.println("データ取得テスト: " + mapper.findAllDesc());
@@ -35,7 +35,7 @@ public class ItemController {
 		return "index";
 	}
 
-	//服の登録処理実行（フォームの送信ボタンが押されたらここに来る）
+	//２：服の登録処理実行（フォームの送信ボタンが押されたらここに来る）
 
 	@PostMapping("/add") // URLは登録用の名前にする
 	//引数ClothにしたらClothクラスの内容全部受け取れる
@@ -75,9 +75,10 @@ public class ItemController {
 		return "redirect:/cloth";//④ 保存が終わったら一覧ページ（/cloth）に戻る
 	}
 
-	//登録した服の削除機能
+	//３：登録した服の削除機能
+
 	//@PostMapping("/delete/{id}") の {id}
-	//=URLのどこから数字を抜き取ればいいかを教えるための指標（目印
+	//=URLのどこから数字を抜き取ればいいかを教えるための指標（目印）
 	@PostMapping("/delete/{id}")
 	//@PathVariable=@PostMappingの指標受けて実際のURLみてidとってくる
 	//Integer id =取ってきた数字をJavaの中で使えるように「変数の中に入れる」という命令機能
