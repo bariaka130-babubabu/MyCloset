@@ -1,5 +1,7 @@
 package com.example.app.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +46,8 @@ public class ItemController {
 			//@RequestParam("clothImage")=HTMLの画面にある <input type="file" name="clothImage"> の name="clothImage"
 			//MultipartFile file= Javaで「ファイル（画像や音声、PDFなど）」を扱うための専用の型（クラス）
 			/*これを使うことで、ファイルの名前を調べたり（.getOriginalFilename()）、
-			 * ファイルの種類を調べたり（.getContentType()）、
-			 * 実際にパソコンに保存したり（.transferTo()）できる*/
+			  ファイルの種類を調べたり（.getContentType()）、
+			 *実際にパソコンに保存したり（.transferTo()）できる*/
 			@RequestParam("clothImage") MultipartFile file) {
 
 		//(1)ファイルが空だったら一覧へ戻す　窓口の仕事
@@ -91,4 +93,38 @@ public class ItemController {
 		return "redirect:/cloth";
 	}
 
+	//４：カテゴリー検索機能
+	@GetMapping("/search")
+	public String searchByCategory(
+			//selectタグのname(フォルダ名)="category"　
+			//「HTML側で category という名前で送られてくるデータを探してね」とJavaに指定
+			//selectタグはname=データの箱名/ optionタグvalue=データの中身
+			//★これを合体させて、category = tops という1組のデータ（ペア）を作る
+			//【Java】 はHTMLの「文字」(htmlは文字でしかjavaに送れない)で届いたデータをキャッチして、
+			//Domainのルール（Stringやint）に合わせて元に戻してあげる!!
+			//→String category＝"category"をjavaでcategoryと呼んで使うと宣言、移し替え
+			@RequestParam("category") String category,
+			Model model) {
+
+		// 【テスト用①】画面（URL）から文字が届いたかチェック
+		System.out.println("★【Controller】画面から届いたカテゴリ: " + category);
+
+		// サービスを呼び出してリストを受け取る
+		List<Cloth> result = service.getClothesByCategory(category);
+
+		// 【テスト用②】サービスがDBから何着の服を拾ってきたかチェック
+		System.out.println("★【Service】DBから取得した服の数: " + result.size() + "着");
+		for (Cloth c : result) {
+			System.out.println("  -> 取得した服の名前: " + c.getName());
+		}
+
+		//getClothesByCategoryメソッドの結果を"clothes"につめてhtmlへ渡す
+		//model.addAttribute(
+		//初期ページの"clothes"とは中身が(全データ,カテゴリ別データ)が違うが
+		//HTML側は"clothes"というデータが届いたらループで回す＝共通の仕組み
+		//→あえて同じ名前の"clothes"箱に入れる
+		//"clothes", service.getClothesByCategory(category));
+		return "search-result";
+
+	}
 }
