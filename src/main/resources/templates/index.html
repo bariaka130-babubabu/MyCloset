@@ -52,23 +52,62 @@
 	画面のレイアウトを「左側エリア」と「右側エリア」に分けたいときやパーツをグループごとにガバッとまとめて四角い箱に入れたいときに使います-->
 	 
 	<div>
-		<h2>お洋服をカテゴリで検索する</h2>
-		
-	<form action="/search" method="get">
+		<h2>お洋服を条件で絞り込んで検索する</h2>
+<!--onsubmit="...": 送信ボタンおされたら""の中身を実行してね(HTMLの決まり文句)-->
+<!--return ...：関数の結果(true or false)をここに返してね、という命令(JSの決まり文句)-->
+<!--validateSearchForm()：自由な関数名-->
+	<form action="/search" method="get" onsubmit="return validateSearchForm()">
 		<p>
-						<label>カテゴリ</label>
-						<select name="category">
-							<option value="tops">トップス</option>
-							<option value="pants">パンツ</option>
-							<option value="skirt">スカート</option>
-							<option value="onepiece">ワンピース</option>
-							<option value="outer">アウター</option>
-							<option value="shoes">シューズ</option>
-							<option value="bag">バッグ</option>
-							<option value="others">その他</option>
-						</select>
-					</p>
-		<button type="submit">検索</button>
+			<label>カテゴリ：</label>
+				<select name="category">
+<!--	value="": これが選ばれた時は、中身は空っぽ（指定なし）のデータを送る-->
+					<option value="">すべて(指定なし)</option>
+					<option value="tops">トップス</option>
+					<option value="pants">パンツ</option>
+					<option value="skirt">スカート</option>
+					<option value="onepiece">ワンピース</option>						
+					<option value="outer">アウター</option>
+					<option value="shoes">シューズ</option>
+					<option value="bag">バッグ</option>	
+					<option value="others">その他</option>					
+				</select>
+		</p>
+		<p>
+			<label>カラー(複数選択可)：</label><br/>
+<!--		全体を <label>〜</label> で囲むことで、「ホワイト」という文字を
+			クリックしてもチェックボックスにチェックが入る-->
+				<label><input type="checkbox" name="colors" value="white"/>ホワイト</label>
+				<label><input type="checkbox" name="colors" value="beige" />ベージュ</label>
+				<label><input type="checkbox" name="colors" value="black" />ブラック</label>
+				<label><input type="checkbox" name="colors" value="gray" />グレー</label>
+				<label><input type="checkbox" name="colors" value="navy" />ネイビー</label>
+				<label><input type="checkbox" name="colors" value="red" />レッド</label>
+				<label><input type="checkbox" name="colors" value="pink" />ピンク</label><br/>
+				<label><input type="checkbox" name="colors" value="orange" />オレンジ</label>
+				<label><input type="checkbox" name="colors" value="yellow" />イエロー</label>
+				<label><input type="checkbox" name="colors" value="green" />グリーン</label>
+				<label><input type="checkbox" name="colors" value="purple" />パープル</label>
+				<label><input type="checkbox" name="colors" value="blue" />ブルー</label>
+				<label><input type="checkbox" name="colors" value="brown" />ブラウン</label>																
+		</p>
+		<p>
+			<label >着用季節(複数選択可)：</label><br/>
+				<label><input type="checkbox" name="seasons" value="isSpring" />春</label>
+			     <label><input type="checkbox" name="seasons" value="isSummer" />夏</label>
+			     <label><input type="checkbox" name="seasons" value="isAutumn" />秋</label>
+			     <label><input type="checkbox" name="seasons" value="isWinter" />冬</label>
+		</p>
+		<p>
+			<label>ブランド名：</label>
+			<input type="text" name="brand" placeholder="例）UNIQLO（空欄でもOK）"style="width: 200px;"  />
+		</p>
+		<p>
+			<label >
+				<input type="checkbox" name="isFavorite" value="true" />★お気に入りのみ表示
+			</label>
+		</p>
+					
+		<button type="submit">この条件で検索する</button>
 	</form>
 	</div>
 	
@@ -87,7 +126,7 @@
 			</p>
 <!--		pタグ内は改行されない・<p> タグは「文章の段落」前後に少し広めの空白が自動で入る-->
 			<p>
-				<label>カテゴリ</label>
+				<label>カテゴリ：</label>
 				<select name="category">
 					<option value="tops">トップス</option>
 					<option value="pants">パンツ</option>
@@ -150,6 +189,71 @@
 			</p>
 	
 		</form>
-		</div>
+	</div>
+	
+	<script>
+		//function：今から関数を作るというJSの宣言-
+		function validateSearchForm(){
+	//①画面から入力されたデータを集める
+		
+		//(1)selectタグの選ばれている値
+		
+		//const 〇〇: 変数作る宣言（JS）
+		//★selectタグで、name属性がcategoryの要素を取得
+		//'select[name="category"]'：selectタグ　かつ　name="category"を持つ要素
+		//全体が 1つの文字列 だから、外側を ' ' で囲ってる (JavaScriptに対して「ここからここまでが、
+		//探してほしいCSSの条件だよ」と伝える)
+		//内側の " "（ダブル）：CSSのルールの中で「colors という名前（文字列）」を指定
+		//document.querySelector(...): 「HTMLの中から指定の部品（タグ）を探して！」という命令
+		//→JavaScriptが最初から持っている機能（メソッド）
+		//document → HTML全体  
+		//querySelector():最初に見つけた単一のオブジェクト取ってくる←document持ってるメソッド(JS)
+		//.value：プロパティ＝そのオブジェクトが持っている「データ（中身）」
+		//今選ばれている選択肢を抜き取ってcategoryという箱に入れてる（const category = select.value;）
+		//→valueは単一オブジェクトに使える
+		const category=document.querySelector('select[name="category"]').value;
+		
+		//(2)チェックボックスでチェックは入ってるものを全部集める
+		
+		//querySelectorAll():見つかったもの全部（要素の詰まったリスト)全部とってくる
+		//:checked＝name="colors"からチェックがついてるものだけに絞れる
+		//→JavaScript独自の機能ではなく、CSSのルール（セレクター）＝''のなかに書く
+		const colors = document.querySelectorAll('input[name="colors"]:checked');
+		/*テスト用： チェックされたものを1つずつ取り出して処理する
+		colors.forEach(input => {
+		    console.log(input.value); // これでチェックされた値が順番に表示される！
+		});*/
+		const seasons =document.querySelectorAll('input[name="seasons"]:checked');	
+		
+		//(3)文字入力欄（文字の前後の余計なスペースを .trim() で削る）
+		//.trim()：文字列（テキスト）の「前後に勝手に入っちゃった不要なスペース(空白)を自動で消してくれるメソッド
+		//→文字列専用のメソッドである （jsメソッド）
+		const brand = document.querySelector('input[name="brand"]').value.trim();
+		
+		//(4)お気に入りのチェック状態
+		const isFavorite = document.querySelector('input[name="isFavorite"]:checked');
+		
+	// 2. 「すべての条件が未入力・未選択」かどうかを判定する
+		// && は「〜かつ〜」という意味です
+		//===（厳密等価）：型も中身も完全に一致しているかを見る
+		//.length：配列が空かどうかを調べるには、配列の長さ（要素の数）を見るの確実
+		//category === "" ＝：カテゴリが未選択（空っぽ）
+		//&& colors.length === 0 ：なおかつ、色のチェック件数が0件
+		//&& seasons.length === 0 ＝：なおかつ、季節のチェック件数が0件
+		//&& !isFavorite ：　なおかつ、お気に入りにチェックが入っていない（! は「〜ではない」の否定）
+		if (category === "" && colors.length === 0 
+			&& seasons.length === 0 && brand === "" && !isFavorite) {
+				// ポップアップで警告を出す
+				//alert() は JavaScriptのメソッド（関数）
+				//関数（Function）： 命令をひとまとめにしたもの（例：○○() ）。
+				//メソッド（Method）： オブジェクト（モノやデータ）に所属している関数のこと。
+				alert("検索条件を最低1つは選択、または入力してください");
+				//falseを返すと、Java（サーバー）への送信をストップします！
+				return false;
+			}
+			//// どれか1つでも入力されていれば、無事に検索を実行（送信）
+			return true;
+		}
+	</script>
 </body>
 </html>
