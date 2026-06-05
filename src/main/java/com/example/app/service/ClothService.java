@@ -88,15 +88,34 @@ public class ClothService {
 
 	}
 
-	//４：カテゴリー検索のビジネスロジック
+	//４：マルチ条件の絞込検索のビジネスロジック（パワーアップ！！)
 	//ここにおすすめ順に並び替えや、在庫無い物表示しないなど色々なルール後から追加できる
 
-	//String category: 画面から送られてきた「tops」や「pants」などのカテゴリ名を受け取る
-	//topsなど文字列でデータ探すが見つかるのは服のリスト＝戻り値List<Cloth>
+	//引数を5つに増やして、画面からの絞り込み条件をすべて受け取れるようにします
+	//→★「文字（検索条件）を5つ渡して、服のリスト（検索結果）を1つ返してもらう」
+	//マッパーから返ってくる(戻り値)： 条件に合う複数の「Cloth オブジェクト(服のデータ)入ったリストを受け取る。
+	//String category * ⇒ 文字（例："tops"）
+	//List<String> colors⇒ 文字の詰め合わせ（例："pink" と "white" という文字が入った箱）
+	//List<String> seasons⇒ 文字の詰め合わせ（例："spring" と "summer" という文字が入った箱）
+	//String brand⇒ 文字（例："Majestic Legon"）
+	//Boolean isFavorite⇒ ON/OFFのデータ（例：true または false）
+	public List<Cloth> searchClothes(
+			String category,
+			List<String> colors,
+			List<String> seasons,
+			String brand,
+			Boolean isFavorite) {
+
+		// 届いた5つのデータをそのままマッパー（Mapper）へ丸投げして、
+		// データベースから条件に合う服を引っ張ってきてもらいます。
+		return mapper.search(category, colors, seasons, brand, isFavorite);
+	}
+
+	/*【カテゴリ検索のみの機能】String category: 画面から送られてきた「tops」や「pants」などのカテゴリ名を受け取る
+	//戻り値List<Cloth>：topsなど文字列でデータ探すが見つかるのは服のリスト
 	public List<Cloth> getClothesByCategory(String category) {
 		//プログラムは「右側(＝イコールの右側や,returnの後ろ)を先に計算・実行する」というルール
 		//届いたデータを、その瞬間に return がキャッチして、呼び出し元(コントローラー)に送り返す
 		return mapper.findByCategory(category);
-
-	}
+		}*/
 }

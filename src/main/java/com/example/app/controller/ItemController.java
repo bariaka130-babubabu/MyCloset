@@ -1,5 +1,7 @@
 package com.example.app.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,6 +96,7 @@ public class ItemController {
 	//４：カテゴリー検索機能
 	@GetMapping("/search")
 	public String searchByCategory(
+			//【1】カテゴリ：
 			//selectタグのname(フォルダ名)="category"　
 			//「HTML側で category という名前で送られてくるデータを探してね」とJavaに指定
 			//selectタグはname=データの箱名/ optionタグvalue=データの中身
@@ -101,10 +104,39 @@ public class ItemController {
 			//【Java】 はHTMLの「文字」(htmlは文字でしかjavaに送れない)で届いたデータをキャッチして、
 			//Domainのルール（Stringやint）に合わせて元に戻してあげる!!
 			//→String category＝"category"をjavaでcategoryと呼んで使うと宣言、移し替え
-			@RequestParam("category") String category,
+			//required = false：何も選択されてなくてもOK
+			//→category という変数（String）に ""（空文字） として受け取る
+			//@RequestParam()のなか1つのときはvalue省力できる/2つなったらデータの名前書く！！！
+			//★value=""：「Javaの value = は、HTMLの name="..." の中身を指定するもの」
+			//→Java側が用意した設定用のラベル名
+			//HTMLのvalueとは別物！！(htmlのvalueはデータそのものの中身（tops, white など）)
+			@RequestParam(value = "category", required = false) String category,
+			//【2】カラー：
+			//複数選択されたチェックボックスは java.util.List<String> でまとめてキャッチ！
+			// 画面で「ホワイト」と「ピンク」にチェックを入れると、[white, pink] というリストになります
+			@RequestParam(value = "colors", required = false) List<String> colors,
+			//【3】着用季節：
+			// 画面のvalue属性に仕込んだ「isSpring」などの文字がリストに詰まって届く
+			@RequestParam(value = "seasons", required = false) List<String> seasons,
+			// 【4】ブランド名：文字入力なので String。空欄なら空文字（""）で届く（まれにnullもある)
+			@RequestParam(value = "brand", required = false) String brand,
+			//// 【5】お気に入り：
+			//チェックボックスにチェックが入れば「true」、なければ「null」が入る型（Boolean）にします
+			// ※小文字の booleanだとnullが入れなくてエラーになるので、大文字の Boolean(クラス型)にする
+			@RequestParam(value = "isFavorite", required = false) Boolean isFavorite,
 			Model model) {
 
-		/*【テスト用①】画面（URL）から文字が届いたかチェック
+		//★絞込【テスト用】画面からどんなデータが届いたかコンソールで確認（超・大事なステップ！）
+		// これを行うことで、「HTMLのname属性」と「Javaの引数名」が正しく繋がっているか答え合わせ
+		System.out.println("====== ［検索条件の受信テスト］ ======");
+		System.out.println("★届いたカテゴリ: " + category);
+		System.out.println("★選ばれた色リスト: " + colors);
+		System.out.println("★選ばれた季節リスト: " + seasons);
+		System.out.println("★届いたブランド名: " + brand);
+		System.out.println("★お気に入りチェックある？: " + isFavorite);
+		System.out.println("=================================");
+
+		/*★カテゴリ検索【テスト用①】画面（URL）から文字が届いたかチェック
 			System.out.println("★【Controller】画面から届いたカテゴリ: " + category);
 			// サービスを呼び出してリストを受け取る
 			List<Cloth> result = service.getClothesByCategory(category);
@@ -114,7 +146,9 @@ public class ItemController {
 				System.out.println("  -> 取得した服の名前: " + c.getName());
 			}*/
 
-		//getClothesByCategoryメソッドの結果を"clothes"につめてhtmlへ渡す
+		// TODO: 次のステップで、この5つのデータをサービス（Service）へ引数として渡します！
+
+		//【カテゴリ検索】getClothesByCategoryメソッドの結果を"clothes"につめてhtmlへ渡す
 		model.addAttribute(
 				//初期ページの"clothes"とは中身が(全データ,カテゴリ別データ)が違うが
 				//HTML側は"clothes"というデータが届いたらループで回す＝共通の仕組み
