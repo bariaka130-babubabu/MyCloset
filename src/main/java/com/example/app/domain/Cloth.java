@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Cloth {
 	//データベースの設計図（テーブル）と1対1で対応するクラス
+	//データベース保存用クラス
 
 	private Integer id;
 	private String name;
@@ -20,7 +21,7 @@ public class Cloth {
 	private int price;
 
 	//boolean（小文字）にすると、最初から「false（☆）」が入る扱いやすい
-	private boolean isFavorite;
+	private boolean favorite;
 	private String imageName;
 	/*これが「setImageName」の正体！
 			public void setImageName(String imageName) {←
@@ -31,10 +32,10 @@ public class Cloth {
 
 	//季節は「○か×か（true/false）」で判定できるようにbooleanにします
 	//組み合わせ16通り
-	private boolean isSpring;
-	private boolean isSummer;
-	private boolean isAutumn;
-	private boolean isWinter;
+	private boolean spring;
+	private boolean summer;
+	private boolean autumn;
+	private boolean winter;
 
 }
 

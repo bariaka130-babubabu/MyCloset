@@ -3,10 +3,30 @@
 
 <mapper namespace="com.example.app.mapper.ClothMapper">
 
+<!--★XMLは「データや設定」を保管するもの
+	タグの名前は自由。画面に表示するためではなく、
+	プログラムがデータを読みやすくするために使われる
+	(HTMLはタグ名が決まっていて見た目を整えるもの)-->
+
 <!--全件取得-->
 <!--oreder by カラム名= どういう順番で並び替えるか-->
+<!--domainとDBのカラム名変えたのでselectのあとしっかり明記する-->
 <select id="findAllDesc" resultType="Cloth">
- select * from item  order by id desc
+ select 
+    id,
+    name,
+    category,
+    color,
+    brand,
+    price,
+    image_name AS imageName,
+    is_favorite AS favorite,
+    is_spring AS spring,
+    is_summer AS summer,
+    is_autumn AS autumn,
+    is_winter AS winter
+ from item  
+ order by id desc
 
 </select>
 
@@ -33,12 +53,12 @@
  #{color},
  #{brand},
  #{price},
- #{isFavorite},
+ #{favorite},
  #{imageName},
- #{isSpring},
- #{isSummer},
- #{isAutumn},
- #{isWinter}
+ #{spring},
+ #{summer},
+ #{autumn},
+ #{winter}
  )
 </insert>
 
@@ -51,17 +71,116 @@
  where id = #{id}
 </delete>
 
-<!--４.カテゴリー検索-->
+<!--４.絞込検索-カテゴリー検索からパワーアップ-->
+
 <!--parameterType=Java側から「このデータをSQLで使ってね」と送り込むときのデータの型
 =XMLの #{...} の中身に値を当てはめるために使う
 引数が文字列（String）なら parameterType="String"、
-クラス丸ごと渡すなら parameterType="Cloth" と書きます。-->
+クラス丸ごと渡すなら parameterType="Cloth" と書きます(カテゴリ検索に対応したクラス作った場合
+今回は引数5つをバラバラに渡してるため省略可能)-->
+<!--parameterType に書けるのは、基本的に「1つの型（クラス名やStringなど）」だけです。
+引数が複数あると、parameterType="String, List, String" のようには書けないため、MyBatisのルールで「引数が複数のときは parameterType は書かずに省略してね。
+中身は @Param の名前で識別するから大丈夫だよ」となっているのです。。-->
 
 <!--resultType=SQLの select 文を実行した結果、Javaのどの型()クラス)にデータを詰め込んでほしいかを指定するもの
 ※データを消すだけの delete や、追加するだけの insert はデータを返さないため、resultType は不要-->
-<select  id="findByCategory" parameterType="String" resultType="Cloth">
- select * from item
- where category = #{category}
+<!--resultType="Cloth"： SQLが実行された後、データベースから
+「条件に合致した服のデータ（色は単数の Red や Blue）」が返ってきたときに、
+それを入れる器（うつわ）として Cloth クラスを使います。-->
+<!--「探すための条件（複数）」と「見つかった服のデータ（単数）」は別物なので、
+Cloth クラスに colors（List）がなくても、
+何の問題もなく resultType="Cloth" を指定していい-->
+
+<select  id="search" resultType="Cloth">
+select * from  item
+<!--中身の <if> 条件が1つでも一致した場合のみ、
+SQLに WHERE というキーワードを自動で追加します。
+ex）WHERE category = 'シャツ' AND color IN ('Red')＝WHERE category 
+= #{category} AND color IN ( #{color} )になる-->
+<!--最初に来る条件の AND や OR は、邪魔なので勝手に消してくれる
+（これがないと WHERE AND category = ... になってしまいSQLエラーになる）-->
+<where>
+<!--if test="..."：Javaから渡されたパラメータが条件を満たしているか判定-->
+<!--category != null and category != ''"：
+変数 category が null（未設定）ではなく、かつ ''（空文字）でもない場合、
+つまり「画面でカテゴリがちゃんと選択・入力されている場合」に、
+この内側のSQLを有効にする-->
+<!--AND を付けないと：条件が2つ以上になったときに繋ぎ目がなくなってエラーになる-->
+<if test="category != null and category !=''">
+and category = #{category}
+</if>
+<!--「もし色（colors）が指定されていたら、
+その色だけで検索を絞り込む（IN句を作る）」-->
+<!--colors: 赤や青などのデータが複数詰まった「箱（リストや配列）」-->
+<!--.size():その箱の中に「今、何個のデータが入っているか」を数えてくれる-->
+<if test="colors != null and colors.size() > 0">
+<!--AND color IN ('赤', '青', '緑')：
+		チェックされた数に合わせて自動で組み立ててくれる便利システム-->
+<!--IN を使うとき（色）：「color」という1つの列(DB)の中で、
+	複数の値（赤・青）のどれかに一致するか探したいとき。-->
+and color in
+<!--open="("：ループの始まりに置く文字は？	最初に ( を書く-->
+<!--close=")"：ループの終わりに置く文字は？	最後に ) を書く-->
+<!--separator=","：データとデータの区切り文字は？	データの間に , を挟む-->
+<!--collection="colors"	：元になるリスト＝Java側の変数名
+		ex)「赤, 青, 緑」が入ったリストを指定-->
+<!--item="color"：ループ中、1個ずつのデータを何と呼ぶか＝自由に名前つけれる
+	1個ずつ取り出して color と名付ける-->
+<!--1回目のループで('赤'、2回目のループで('赤', '青'ようなる-->
+	<foreach item="color" collection="colors" open="(" separator="," close=")">
+<!--#{color} の中身（赤、青などの具体的な値）自体はJavaから来たもの、
+	color という変数名（ラベル）自体はMyBatis側で新しく作ったもの-->
+<!--ループで取り出された個々の色（例: 'Red'）が#{color}バインドされる-->
+ 	#{color}
+    </foreach>
+</if>
+
+<!--複数選択可能-->
+<!--OR を使うとき（季節）：「is_spring」「is_summer」という別々の列(DB)を
+	またいで、どれかが true になっているか探したい-->
+<!--and ( ) は「1つの条件の中に複数回答（候補）があるときまとめる-->
+<!--中の <if> たち：チェックがついた季節の分だけ OR ○○ = true を生み出す-->
+<if test="seasons != null and seasons.size() > 0">
+
+<!--AND ( is_spring = true OR is_summer = true ):
+このように、複数選ばれたときは OR で繋がれて、しっかりと「春、または夏の服」を検索-->
+  AND (
+
+<!-- 文字('isSpring')を含んでいたら＝true-->
+   <trim prefixOverrides="OR">
+        <if test="seasons.contains('IsSpring')">
+          is_spring = true
+        </if>
+        <if test="seasons.contains('IsSummer')">
+          OR is_summer = true
+        </if>
+        <if test="seasons.contains('IsAutumn')">
+          OR is_autumn = true
+        </if>
+        <if test="seasons.contains('IsWinter')">
+          OR is_winter = true
+        </if>
+      </trim>
+            )
+ </if>
+ 
+<if test="brand!=null and brand !=''">
+<!--LIKE：SQLの「部分一致（あいまい検索）」を行うためのキーワード-->
+<!--CONCAT ：文字列を結合するSQLの関数-->
+<!--ブランド名の前後に % をくっつけることで、
+「〜を含む」という部分一致の条件を作ってる（例: Nike と入力したら %Nike% になる）-->
+AND brand LIKE CONCAT('%', #{brand}, '%')
+</if>
+
+<!--変数 isFavorite（Boolean型）が null ではなく、
+かつ true（お気に入りチェックON）である場合に有効-->
+<if test="isFavorite != null and isFavorite == true">
+<!--データベースの is_favorite カラムが true のレコードだけにしぼり込み-->
+	AND is_favorite = true
+ </if>
+</where>
+<!--、条件が有ろうが無かろうが、最後の並び替えだけは確実に実行-->
+ORDER BY id DESC
 </select>
 
 </mapper>

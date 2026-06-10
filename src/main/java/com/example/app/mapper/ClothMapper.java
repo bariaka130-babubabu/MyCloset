@@ -21,6 +21,9 @@ public interface ClothMapper {
 	//カテゴリ別の検索機能
 	List<Cloth> findByCategory(String category);
 
+	//絞込検索機能
+	List<Cloth> search(String category, List<String> colors, List<String> seasons, String brand, Boolean isFavorite);
+
 	//お気に入りリスト追加
 
 	//売りたいリスト追加

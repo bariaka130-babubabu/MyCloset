@@ -43,6 +43,12 @@ public class ItemController {
 	//引数ClothにしたらClothクラスの内容全部受け取れる
 	//画像は特殊なので	@RequestParam("clothImage") MultipartFile fileうけとる
 	public String addcloth(Cloth cloth,
+
+			//＊＊テスト「画面から送ったデータが、ちゃんとプログラムに届いているか？ 
+
+			@RequestParam(required = false) String favorite,
+			@RequestParam(required = false) String spring,
+
 			//@RequestParam("clothImage")=HTMLの画面にある <input type="file" name="clothImage"> の name="clothImage"
 			//MultipartFile file= Javaで「ファイル（画像や音声、PDFなど）」を扱うための専用の型（クラス）
 			/*これを使うことで、ファイルの名前を調べたり（.getOriginalFilename()）、
@@ -50,10 +56,21 @@ public class ItemController {
 			 *実際にパソコンに保存したり（.transferTo()）できる*/
 			@RequestParam("clothImage") MultipartFile file) {
 
+		//＊＊テスト　そして、Cloth という型にちゃんと変換されて登録されているか？
+		//favorite param が null（空っぽ）ということは、そもそもHTMLからデータが届いてない
+		//favorite param=on  （←データは届いている）がcloth favorite=false （←でもClothクラスには入っていない）
+		//→Java側の受け取り方に問題があります。Cloth クラスの変数の型（String か boolean か）が合っていない、Spring Bootが自動で変換できていない
+
+		System.out.println("favorite param=" + favorite);
+		System.out.println("spring param=" + spring);
+
+		System.out.println("cloth favorite=" + cloth.isFavorite());
+		System.out.println("cloth spring=" + cloth.isSpring());
+
 		//(1)ファイルが空だったら一覧へ戻す　窓口の仕事
 		//isEmpty():MultipartFile クラス=「ファイルが空っぽか？」
 		if (file.isEmpty()) {
-			return "redirect:/cloth";
+			return "redirect:cloth/";
 		}
 		//(2)安全対策：もしアップロードされたのが「画像」じゃなかったら弾く
 		//＝窓口
@@ -116,7 +133,7 @@ public class ItemController {
 			// 画面で「ホワイト」と「ピンク」にチェックを入れると、[white, pink] というリストになります
 			@RequestParam(value = "colors", required = false) List<String> colors,
 			//【3】着用季節：
-			// 画面のvalue属性に仕込んだ「isSpring」などの文字がリストに詰まって届く
+			// 画面のvalue属性に仕込んだ「IsSpring」などの文字がリストに詰まって届く
 			@RequestParam(value = "seasons", required = false) List<String> seasons,
 			// 【4】ブランド名：文字入力なので String。空欄なら空文字（""）で届く（まれにnullもある)
 			@RequestParam(value = "brand", required = false) String brand,
@@ -148,12 +165,13 @@ public class ItemController {
 
 		// TODO: 次のステップで、この5つのデータをサービス（Service）へ引数として渡します！
 
+		//【マルチ条件検索】searchClothesメソッドの結果を"clothes"につめてhtmlへ渡す
 		//【カテゴリ検索】getClothesByCategoryメソッドの結果を"clothes"につめてhtmlへ渡す
 		model.addAttribute(
 				//初期ページの"clothes"とは中身が(全データ,カテゴリ別データ)が違うが
 				//HTML側は"clothes"というデータが届いたらループで回す＝共通の仕組み
 				//→あえて同じ名前の"clothes"箱に入れる
-				"clothes", service.getClothesByCategory(category));
+				"clothes", service.searchClothes(category, colors, seasons, brand, isFavorite));
 		return "search-result";
 
 	}
