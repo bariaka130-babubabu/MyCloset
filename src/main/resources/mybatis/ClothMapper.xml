@@ -82,11 +82,13 @@
 引数が複数あると、parameterType="String, List, String" のようには書けないため、MyBatisのルールで「引数が複数のときは parameterType は書かずに省略してね。
 中身は @Param の名前で識別するから大丈夫だよ」となっているのです。。-->
 
-<!--resultType=SQLの select 文を実行した結果、Javaのどの型()クラス)にデータを詰め込んでほしいかを指定するもの
+<!--resultType=SQLの select 文を実行した結果、Javaのどの型(),クラスにデータを詰め込んでほしいかを指定するもの
 ※データを消すだけの delete や、追加するだけの insert はデータを返さないため、resultType は不要-->
 <!--resultType="Cloth"： SQLが実行された後、データベースから
 「条件に合致した服のデータ（色は単数の Red や Blue）」が返ってきたときに、
-それを入れる器（うつわ）として Cloth クラスを使います。-->
+それを入れる器（うつわ）として Cloth クラスを使います。
+クラス使う場合はそのクラスで宣言してるすべての値がDBから帰ってくるとき-->
+
 <!--「探すための条件（複数）」と「見つかった服のデータ（単数）」は別物なので、
 Cloth クラスに colors（List）がなくても、
 何の問題もなく resultType="Cloth" を指定していい-->
@@ -185,5 +187,13 @@ AND brand LIKE CONCAT('%', #{brand}, '%')
 <!--、条件が有ろうが無かろうが、最後の並び替えだけは確実に実行-->
 ORDER BY id DESC
 </select>
+
+
+<!--５．クローゼット総額計算-->
+<!--SQLで帰ってくるのは金額のみなので=resultType="Integer"-->
+<select  id="getTotalPrice"  resultType="Integer">
+select sum(price) from item
+</select>
+
 
 </mapper>

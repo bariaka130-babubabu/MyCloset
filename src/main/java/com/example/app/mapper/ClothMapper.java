@@ -24,6 +24,10 @@ public interface ClothMapper {
 	//絞込検索機能
 	List<Cloth> search(String category, List<String> colors, List<String> seasons, String brand, Boolean isFavorite);
 
+	//クローゼットの総額（すべての合計金額）を取得する
+	//服が一着も登録されてないと合計nullなるため型はintではなくIntegerにする
+	Integer getTotalPrice();
+
 	//お気に入りリスト追加
 
 	//売りたいリスト追加
