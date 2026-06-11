@@ -147,6 +147,9 @@ and color in
   AND (
 
 <!-- 文字('isSpring')を含んでいたら＝true-->
+<!--trim prefixOverrides="OR"：「内側で出来上がった文字の先頭に
+ OR（または大文字小文字問わず or）があったら、勝手に消し去ってね」という命令
+ if文でつくられた→OR is_summer = true OR is_autumn = trueの先頭のor消す-->
    <trim prefixOverrides="OR">
         <if test="seasons.contains('IsSpring')">
           is_spring = true
