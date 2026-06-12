@@ -44,6 +44,13 @@ public class ItemController {
 		//totalPriceを"totalPrice"という名前でHTMLへ送る
 		model.addAttribute("totalPrice", totalPrice);
 
+		//クローゼット総量表示機能
+		Integer totalCount = mapper.getTotalCount();
+		if (totalCount == null) {
+			totalCount = 0;
+		}
+		model.addAttribute("totalCount", totalCount);
+
 		return "index";
 	}
 

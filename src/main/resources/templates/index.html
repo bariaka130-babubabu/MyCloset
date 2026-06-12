@@ -16,6 +16,12 @@
 <!--デザイン: 金額を他の文字より「一回り大きく（1.3em）-->
 		<span style="font-size: 1.3em; color: #ff6b6b; font-weight: bold;" 
 		th:text="${totalPrice}">0</span>
+		<span style="color: #ff6b6b; font-weight: bold; 
+		margin-right: 5px;">円</span>
+		<span style="margin-left: 10px; font-weight: bold; color: #666;">（合計: 
+		<span style="font-size: 1.2em; color: #ff6b6b;"
+		 th:text="${totalCount}">0</span>着）
+		</span>
 <!--	/total-details というページへのリンクURL作る-->
 <!--underline：下線＝クリックできるのをわかりやすく-->
 		<a th:href="@{/total-details}" style="margin-left: 15px; font-size: 0.9em;
