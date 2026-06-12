@@ -195,5 +195,9 @@ ORDER BY id DESC
 select sum(price) from item
 </select>
 
+<!--クローゼット総量計算-->
+<select id="getTotalCount" resultType="Integer">
+select count(*) from item
+</select>
 
 </mapper>

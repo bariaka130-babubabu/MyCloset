@@ -7,6 +7,23 @@
 <body>
 	<header>
 	<h1>MyCloset</h1>
+	<!--display: inline-block: 横幅いっぱいに広がらず
+	中の文字の長さに合わせて自動でコンパクトなサイズに-->
+	<div style="margin: 10px; padding: 8px 15px; 
+	background-color: #fff4f4;border-radius: 8px; display: inline-block;
+	border: 1px solid #ffcccc;">
+		<span style="font-weight: bold;">💰クローゼットの総額</span>
+<!--デザイン: 金額を他の文字より「一回り大きく（1.3em）-->
+		<span style="font-size: 1.3em; color: #ff6b6b; font-weight: bold;" 
+		th:text="${totalPrice}">0</span>
+<!--	/total-details というページへのリンクURL作る-->
+<!--underline：下線＝クリックできるのをわかりやすく-->
+		<a th:href="@{/total-details}" style="margin-left: 15px; font-size: 0.9em;
+		color: #0066cc; text-decoration: underline; font-weight: bold;">詳しく見る</a>"></a>
+	</div>
+	
+	
+	
 <!--	<nav>タグ＝ページ移動のための大事なボタン-->
 	<nav>
 		<button type="button">お気に入りリスト</button>

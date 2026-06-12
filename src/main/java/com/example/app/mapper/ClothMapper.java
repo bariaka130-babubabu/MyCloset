@@ -28,6 +28,9 @@ public interface ClothMapper {
 	//服が一着も登録されてないと合計nullなるため型はintではなくIntegerにする
 	Integer getTotalPrice();
 
+	//クローゼットの洋服の総量カウント
+	Integer getTotalCount();
+
 	//お気に入りリスト追加
 
 	//売りたいリスト追加
