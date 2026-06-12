@@ -34,6 +34,16 @@ public class ItemController {
 	public String startPage(Model model) {
 		System.out.println("データ取得テスト: " + mapper.findAllDesc());
 		model.addAttribute("clothes", mapper.findAllDesc());
+
+		//クローゼット総額表示機能＝DBから総額を取得する
+		Integer totalPrice = mapper.getTotalPrice();
+		//もし1着も登録がなくてtotalPriceがnullだった時→画面に0と表示させる
+		if (totalPrice == null) {
+			totalPrice = 0;
+		}
+		//totalPriceを"totalPrice"という名前でHTMLへ送る
+		model.addAttribute("totalPrice", totalPrice);
+
 		return "index";
 	}
 
