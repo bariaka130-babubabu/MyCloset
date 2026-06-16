@@ -200,4 +200,73 @@ select sum(price) from item
 select count(*) from item
 </select>
 
+<!--カテゴリーごとの金額・総量-->
+<!--戻り値の型を resultType="map"→Java側で Map<String, Object>
+	（{category="tops", totalPrice=12000, totalCount=3} のような
+	鍵と値のセット）のリストとして綺麗に受け取れる-->
+<!--COUNT(*)：nullがあろうがなかろうが、データの行数を丸ごと数える-->
+<select id="getCategory" resultType="map">
+select category,<!--そのグループの名前-->
+sum(price) as totalPrice,<!--そのグループに属する商品の金額を全部足したもの-->
+count(*) as totalCount<!--そのグループに属する商品が何個あったか-->
+from item
+group by category
+</select>
+
+<!--季節ごとの金額・総量-->
+<!--季節は4つの行に別れているので1つの表に合体させる-->
+<select id="getSeasonTotal" resultType="map">
+select'春' as season,<!--その「春」という文字が入る列にseasonという名前(列名)をつける-->
+sum(price) as totalPrice,
+count(*) as totalCount<!--絞り込んだ春物商品が全部で何件あるかを数える-->
+from item
+where is_spring = true
+UNION ALL<!--UNION ALL：別々に計算した結果を縦に繋げる春夏秋冬の列の表になる-->
+SELECT '夏' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount 
+FROM item
+WHERE is_summer = true
+UNION ALL
+SELECT '秋' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount
+FROM item
+WHERE is_autumn = true
+UNION ALL
+SELECT '冬' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount 
+FROM item 
+WHERE is_winter = true
+</select>
+
+<!--カテゴリ×季節の金額・総量-->
+<!--UNION ALL：それぞれのSELECT文が取得した結果シートを縦に丸ごと連結する-->
+SELECT category,<!-- 3.カテゴリー名表示-->
+'春' AS season,<!--4.春という行のseasonという列を作る -->
+SUM(price) AS totalPrice,<!--5.グループ	(カテゴリー)金額計算 -->
+COUNT(*) AS totalCount <!--6.グループ	(カテゴリー)総量計算 -->
+FROM item <!--1.まずテーブルから指定されたカラムがtrueの商品だけ取ってくる-->
+WHERE is_spring = true 
+GROUP BY category<!--2.絞り込んだ商品をカテゴリーごとにグループ化-->
+UNION ALL
+SELECT category, '夏' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount 
+FROM item 
+WHERE is_summer = true GROUP BY category
+UNION ALL
+SELECT category, '秋' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount 
+FROM item WHERE is_autumn = true 
+GROUP BY category
+UNION ALL
+SELECT category, '冬' AS season, 
+SUM(price) AS totalPrice, 
+COUNT(*) AS totalCount 
+FROM item WHERE is_winter = true 
+GROUP BY category
+
 </mapper>
