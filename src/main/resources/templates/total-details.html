@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>クローゼット分析-MyCloset</title>
+</head>
+<body>
+
+	<head>
+		<h1>クローゼット分析</h1>
+		<a th:href="@{/cloth}">一覧に戻る</a>
+	</head>
+	<hr/> <!--テーマの切り替え 一本の線がはいる-->
+	
+	<div>
+		<button type="button">🌸 季節別で見る</button>
+		<button type="button">👚 カテゴリ別で見る</button>
+	</div><!--文章の改行　線は入らず、「行が下にずれるだけ。-->
+	<br/>
+	<div>
+	    <h3>ここに後からまあるいグラフが出るよ！</h3>
+	    <p>（今はまだライブラリも入れてないから真っ白だよ）</p>
+	</div>
+	<hr />
+	
+	<div>
+	     <h3>🔍 ピンポイントでクローゼットを覗く</h3>
+		 <form th:action="@{/cloth/analyze}" method="get">
+			  
+	     	<select name="detailSeason">
+<!--　th:selected="${...}":今選んだものをリロードしても記憶しておく-->
+	        	<option value="spring"th:selected="${selectedSeason == 'spring'}">春🌸</option>
+	        	<option value="summer"th:selected="${selectedSeason == 'summer'}">夏☀️</option>
+	        	<option value="autumn"th:selected="${selectedSeason == 'autumn'}">秋🍁🍁</option>
+	       	 	<option value="winter"th:selected="${selectedSeason == 'winter'}">冬❄️</option>
+	     	</select>
+	        
+	     <span> × </span>
+	        
+	     <select name="detailCategory">
+	       	<option value="tops"th:selected="${selectedCategory == 'tops'}">トップス👚</option>
+	        <option value="pants"th:selected="${selectedCategory == 'pants'}">パンツ👖</option>
+	        <option value="skirt"th:selected="${selectedCategory == 'skirt'}">スカート👗</option>
+	        <option value="outer"th:selected="${selectedCategory == 'outer'}">アウター🧥</option>
+	      </select>
+
+	     <button type="submit">確認する</button>
+
+	     <div>
+<!--　0はダミーデータでtotalPriceが表示されたら消える-->
+<!--　strongタグの中は全部太字-->
+<!--th:text は中身を丸ごと上書きしてしまうのでspanタグで囲う-->
+	     <p><strong>合計金額： ¥<span th:text="${totalPrice}">0</span>
+		 </strong> (<span th:text="${totalCount}">0</span>着 )</p>
+	     </div>
+	    </div>
+	
+	
+	
+	
+</body>
+</html>
