@@ -6,10 +6,10 @@
 </head>
 <body>
 
-	<head>
+	<header>
 		<h1>クローゼット分析</h1>
 		<a th:href="@{/cloth}">一覧に戻る</a>
-	</head>
+	</header>
 	<hr/> <!--テーマの切り替え 一本の線がはいる-->
 	
 	<div>
@@ -40,11 +40,17 @@
 	     <select name="detailCategory">
 	       	<option value="tops"th:selected="${selectedCategory == 'tops'}">トップス👚</option>
 	        <option value="pants"th:selected="${selectedCategory == 'pants'}">パンツ👖</option>
-	        <option value="skirt"th:selected="${selectedCategory == 'skirt'}">スカート👗</option>
+	        <option value="skirt"th:selected="${selectedCategory == 'skirt'}">スカート👧</option>
+			<option value="onepiece" th:selected="${selectedCategory == 'onepiece'}">ワンピース👗</option>
 	        <option value="outer"th:selected="${selectedCategory == 'outer'}">アウター🧥</option>
+			<option value="shoes" th:selected="${selectedCategory == 'shoes'}">シューズ👟</option>
+			  <option value="bag" th:selected="${selectedCategory == 'bag'}">バッグ👜</option>
 	      </select>
 
 	     <button type="submit">確認する</button>
+		 
+		 
+		 </form>
 
 	     <div>
 <!--　0はダミーデータでtotalPriceが表示されたら消える-->
