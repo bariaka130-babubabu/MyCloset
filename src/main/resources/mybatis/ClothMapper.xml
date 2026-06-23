@@ -243,6 +243,7 @@ WHERE is_winter = true
 
 <!--カテゴリ×季節の金額・総量-->
 <!--UNION ALL：それぞれのSELECT文が取得した結果シートを縦に丸ごと連結する-->
+<select id="getCategorySeasonTotal" resultType="map">
 SELECT category,<!-- 3.カテゴリー名表示-->
 '春' AS season,<!--4.春という行のseasonという列を作る -->
 SUM(price) AS totalPrice,<!--5.チーム分けされたものを(カテゴリー)金額計算 -->
@@ -268,5 +269,6 @@ SUM(price) AS totalPrice,
 COUNT(*) AS totalCount 
 FROM item WHERE is_winter = true 
 GROUP BY category
+</select>
 
 </mapper>

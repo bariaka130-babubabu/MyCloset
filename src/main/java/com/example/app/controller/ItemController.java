@@ -1,6 +1,7 @@
 package com.example.app.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -192,4 +193,105 @@ public class ItemController {
 		return "search-result";
 
 	}
+
+	//クローゼット分析詳細
+
+	@GetMapping("/cloth/analyze")
+	public String showAnalyzePage(
+			//HTMLでselectタグで受け取ったものを変数に入れる
+			@RequestParam(name = "detailSeason", required = false) String season,
+			@RequestParam(name = "detailCategory", required = false) String category,
+			Model model) {
+		// グラフ用データ（常に表示するもの）
+		model.addAttribute("categoryChartData", mapper.getCategory());
+		model.addAttribute("seasonChartData", mapper.getSeasonTotal());
+
+		// =========================
+		// ① グラフ・一覧表示用データ
+		// =========================
+
+		/*本来なら専用のデータ型を使ってデータ受け取るが回のように「データベース側で GROUP BY などを
+		  使って一時的に新しく作った集計表」の場合そのためだけに
+		  わざわざ専用のJavaクラスを1つ1つ作るのは面倒→どんな形の表データでも
+		  とりあえず枠線（列名と値）だけ合わせてざっくり受け取れる便利屋=List<Map<String, Object>>*/
+		//Map<String, Object>:表のデータ1行分
+		//Map は 「キー（列の名前）」と「値（その列の中身）」をペアにして保存する仕組み
+		//String（キーの種類）: 列の名前は "category" や "totalPrice" のような文字列
+		/*Object（値の種類）: 中身には "トップス"(文字列)が入ることもあれば、5000(数値)が入ることもある
+		 →なんでも入れられるようにしておく*/
+		//List は「配列:先ほどの 「1行分のMap」が縦にたくさん並んだもの=「表（テーブル）そのもの」
+		List<Map<String, Object>> categoryData = mapper.getCategory();
+		List<Map<String, Object>> seasonData = mapper.getSeasonTotal();
+
+		model.addAttribute("categoryData", categoryData);
+		model.addAttribute("seasonData", seasonData);
+
+		//初期値
+		int totalPrice = 0;
+		int totalCount = 0;
+
+		//季節とカテゴリ両方選択されてるときのみ{}内実行
+		if (season != null && category != null) {
+			List<Map<String, Object>> allData = mapper.getCategorySeasonTotal();
+
+			String japaneseSeason = "";// ① まず外側で箱(japaneseSeason )を用意する(空)
+
+			//A".equals(B) :「AとBは同じ文字ですか？」javaメソッド
+			if ("spring".equals(season)) {
+				japaneseSeason = "春";// ② if の中で、箱の中に「春」を入れる
+			} else if ("summer".equals(season)) {
+				japaneseSeason = "夏";
+			} else if ("autumn".equals(season)) {
+				japaneseSeason = "秋";
+			} else if ("winter".equals(season)) {
+				japaneseSeason = "冬";
+			} else {
+				// どの季節にも当てはまらなかった時の「保険」
+				japaneseSeason = "不正な季節です";
+			}
+			/*データベースから取得した全ての集計データ（allData）から、1行ずつデータを取り出して
+			row 変数に入れ、ループ処理を行う*/
+
+			for (Map<String, Object> row : allData) {
+				//データベースの1行から、「カテゴリ名」と「季節名」を取り出します
+				/*row から取り出した直後のデータは「何でも入る型（Object）」になっているため、
+					これは文字列（String）として使いますよ！」とJavaに伝えてる*/
+				String sqlCategory = (String) row.get("category");
+				String sqlSeason = (String) row.get("season");
+				//「ユーザーが画面で選んだカテゴリ」と「翻訳した日本語の季節」が、
+				//データベースから取り出した1行のデータと完全に一致するかを判定
+				if (category.equals(sqlCategory) && japaneseSeason.equals(sqlSeason)) {
+					//三項演算子
+					//変数名.get("文字列"):文字列の名札を使って、中身のデータを取り出している
+					//row（1行分のデータ）の箱の中を探す
+					//→totalPrice" という文字列（文字のキー）が貼り付けられたデータを探す。
+					//見つけたら、その横にある 5000 や 12000 といった実際の「数字のデータ」を引っ張り出してくる。
+					//"totalPrice"=SQLでの(SUM(price) AS totalPrice)
+					//Numberはどんな数字の型も受け取れる(javaがもともと持ってる)
+					//.intValue()：どんな数字も整数(int)に変換する、javaが持ってるNumbeクラスメソッド
+					//? の後ろ（正しいとき）：((Number) row.get("totalPrice")).intValue()
+					//: の後ろ（間違っているとき）：0
+					totalPrice = row.get("totalPrice") != null
+							? ((Number) row.get("totalPrice")).intValue()
+							: 0;
+
+					totalCount = row.get("totalCount") != null
+							? ((Number) row.get("totalCount")).intValue()
+							: 0;
+					//break;：for ループを途中で終了（脱出）
+					break;
+				}
+			}
+
+		}
+		//HTMLへ渡す（画面の表示準備と遷移）
+		model.addAttribute("selectedSeason", season);
+		model.addAttribute("selectedCategory", category);
+
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("totalCount", totalCount);
+
+		return "total-details";
+	}
+
 }

@@ -54,9 +54,9 @@ public interface ClothMapper {
 	List<Map<String, Object>> getSeasonTotal();
 
 	/**
-	 * ③ カテゴリ×季節の金額・総量を取得する
-	 * XMLの id（今回は仮に getCategorySeasonTotal とします）と連動させます
-	 * 戻り値：[{category="tops", season="春", totalPrice=5000, totalCount=2}, {...}]
+	 ③ カテゴリ×季節の金額・総量を取得する
+	 XMLの id（今回は仮に getCategorySeasonTotal とします）と連動させます
+	 戻り値：[{category="tops", season="春", totalPrice=5000, totalCount=2}, {...}]
 	 */
 	List<Map<String, Object>> getCategorySeasonTotal();
 
