@@ -10,7 +10,7 @@ import com.example.app.domain.Cloth;
 @Mapper
 public interface ClothMapper {
 
-	//最新順で洋服表示
+	//最新順で洋服表示.全件取得
 	List<Cloth> findAllDesc();
 
 	//洋服を登録する機能
@@ -59,6 +59,9 @@ public interface ClothMapper {
 	 戻り値：[{category="tops", season="春", totalPrice=5000, totalCount=2}, {...}]
 	 */
 	List<Map<String, Object>> getCategorySeasonTotal();
+
+	//詳細表示
+	Cloth findById(Integer id);
 
 	//お気に入りリスト追加
 

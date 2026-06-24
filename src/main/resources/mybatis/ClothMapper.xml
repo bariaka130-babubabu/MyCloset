@@ -271,4 +271,24 @@ FROM item WHERE is_winter = true
 GROUP BY category
 </select>
 
+<!--１件づつの詳細表示-->
+<select id="findById" resultType="Cloth">
+
+select
+    id,
+    name,
+    category,
+    color,
+    brand,
+    price,
+    image_name AS imageName,
+    is_favorite AS favorite,
+    is_spring AS spring,
+    is_summer AS summer,
+    is_autumn AS autumn,
+    is_winter AS winter
+from item
+where id = #{id}
+
+</select>
 </mapper>
