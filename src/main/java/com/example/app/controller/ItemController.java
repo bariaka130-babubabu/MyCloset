@@ -298,4 +298,18 @@ public class ItemController {
 		return "total-details";
 	}
 
+	//1件づつクリックで詳細表示
+
+	@GetMapping("/cloth/detail/{id}")
+	public String showDetail(
+			@PathVariable Integer id,
+			Model model) {
+
+		Cloth cloth = mapper.findById(id);
+
+		model.addAttribute("cloth", cloth);
+
+		return "cloth-detail";
+	}
+
 }
