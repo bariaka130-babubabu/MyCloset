@@ -217,25 +217,25 @@ group by category
 <!--季節は4つの行に別れているので1つの表に合体させる-->
 <select id="getSeasonTotal" resultType="map">
 select'春' as season,<!--その「春」という文字が入る列にseasonという名前(列名)をつける-->
-sum(price) as totalPrice,
+COALESCE(sum(price), 0) as totalPrice,
 count(*) as totalCount<!--絞り込んだ春物商品が全部で何件あるかを数える-->
 from item
 where is_spring = true
 UNION ALL<!--UNION ALL：別々に計算した結果を縦に繋げる春夏秋冬の列の表になる-->
 SELECT '夏' AS season, 
-SUM(price) AS totalPrice, 
+COALESCE(sum(price), 0) as totalPrice, 
 COUNT(*) AS totalCount 
 FROM item
 WHERE is_summer = true
 UNION ALL
 SELECT '秋' AS season, 
-SUM(price) AS totalPrice, 
+COALESCE(sum(price), 0) as totalPrice, 
 COUNT(*) AS totalCount
 FROM item
 WHERE is_autumn = true
 UNION ALL
 SELECT '冬' AS season, 
-SUM(price) AS totalPrice, 
+COALESCE(sum(price), 0) as totalPrice, 
 COUNT(*) AS totalCount 
 FROM item 
 WHERE is_winter = true

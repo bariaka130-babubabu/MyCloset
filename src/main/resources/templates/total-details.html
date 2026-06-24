@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>クローゼット分析-MyCloset</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -13,14 +14,64 @@
 	<hr/> <!--テーマの切り替え 一本の線がはいる-->
 	
 	<div>
-		<button type="button">🌸 季節別で見る</button>
-		<button type="button">👚 カテゴリ別で見る</button>
+		<button type="button" id="seasonBtn">🌸 季節別で見る</button>
+		<button type="button" id="categoryBtn">👚 カテゴリ別で見る</button>
 	</div><!--文章の改行　線は入らず、「行が下にずれるだけ。-->
 	<br/>
-	<div>
-	    <h3>ここに後からまあるいグラフが出るよ！</h3>
-	    <p>（今はまだライブラリも入れてないから真っ白だよ）</p>
+	<div id="seasonArea" style="display: none;">
+		<h3>🌸 季節別分析</h3>
+
+		   <canvas id="seasonChart"></canvas>
+		   
+		   <div th:each="item : ${seasonData}">
+			<p>
+			      <span th:switch="${item.season}">
+
+			          <span th:case="'春'">🌸 春</span>
+			          <span th:case="'夏'">☀️ 夏</span>
+			          <span th:case="'秋'">🍁 秋</span>
+			          <span th:case="'冬'">❄️ 冬</span>
+
+			      </span>
+
+			      ：
+		           <span th:text="${item.totalCount}"></span>着　
+		           ¥<span th:text="${item.totalPrice}"></span>
+		       </p>
+		   </div>
+
 	</div>
+	<div id="categoryArea">
+	    <h3>👚 カテゴリ別分析</h3>
+
+	    <canvas id="categoryChart"></canvas>
+
+	    <div th:each="item : ${categoryData}">
+	        <p>
+				<span th:switch="${item.category}">
+
+				          <span th:case="'tops'">👚 トップス</span>
+				          <span th:case="'pants'">👖 パンツ</span>
+				          <span th:case="'skirt'">👧 スカート</span>
+				          <span th:case="'onepiece'">👗ワンピース</span>
+				          <span th:case="'outer'">🧥 アウター</span>
+				          <span th:case="'shoes'">👟 シューズ</span>
+				          <span th:case="'bag'">👜 バッグ</span>
+
+				      </span>
+
+				      ：
+	            <span th:text="${item.totalCount}"></span>
+				<span th:switch="${item.category}">
+				    <span th:case="'shoes'">足</span>
+				    <span th:case="'bag'">個</span>
+				    <span th:case="*">着</span>
+				</span>
+	            ¥<span th:text="${item.totalPrice}"></span>
+	        </p>
+	    </div>
+	</div>
+	
 	<hr />
 	
 	<div>
@@ -56,13 +107,151 @@
 <!--　0はダミーデータでtotalPriceが表示されたら消える-->
 <!--　strongタグの中は全部太字-->
 <!--th:text は中身を丸ごと上書きしてしまうのでspanタグで囲う-->
-	     <p><strong>合計金額： ¥<span th:text="${totalPrice}">0</span>
-		 </strong> (<span th:text="${totalCount}">0</span>着 )</p>
+<p>
+      所持数：
+      <strong>
+          <span th:text="${totalCount}">0</span>
+		  
+		  <span th:switch="${selectedCategory}">
+		             <span th:case="'shoes'">足</span>
+		             <span th:case="'bag'">個</span>
+		             <span th:case="*">着</span>
+		         </span>
+      </strong>
+  </p>
+
+  <p>
+      総額：
+      <strong>
+          ¥<span th:text="${totalPrice}">0</span>
+      </strong>
+  </p>
+
 	     </div>
 	    </div>
 	
-	
-	
-	
+<!--		ThymeleafからJSへ渡す-->
+		<script th:inline="javascript">
+
+		const seasonData = [[${seasonChartData}]];
+		
+		const labels =
+		    seasonData.map(item => item.season);
+
+		const counts =
+		    seasonData.map(item => item.totalCount);
+
+		new Chart(
+		    document.getElementById("seasonChart"),
+		    {
+		        type: "pie",
+
+		        data: {
+		            labels: labels,
+
+		            datasets: [{
+		                data: counts
+		            }]
+		        }
+		    }
+		);
+
+		console.log("テスト:",seasonData);
+		
+		const categoryData = [[${categoryData}]];
+		
+		const categoryLabels =
+		    categoryData.map(item => {
+
+		        switch(item.category){
+		            case "tops":
+		                return "トップス";
+		            case "pants":
+		                return "パンツ";
+		            case "skirt":
+		                return "スカート";
+		            case "outer":
+		                return "アウター";
+		            case "onepiece":
+		                return "ワンピース";
+		            case "shoes":
+		                return "シューズ";
+		            case "bag":
+		                return "バッグ";
+		            default:
+		                return item.category;
+		        }
+		    });
+
+		const categoryCounts =
+		    categoryData.map(item => item.totalCount);
+
+		console.log(categoryData);
+		
+		
+		new Chart(
+		    document.getElementById("categoryChart"),
+		    {
+		        type: "bar",
+
+		        data: {
+		            labels: categoryLabels,
+
+		            datasets: [{
+		                label: "所持数",
+		                data: categoryCounts
+		            }]
+		        },
+
+		        options: {
+		            responsive: true,
+
+		            scales: {
+		                y: {
+		                    beginAtZero: true,
+							ticks: {
+							    stepSize: 1,
+								precision: 0
+							}
+		                }
+		            }
+		        }
+		    }
+		);
+
+		// ボタン取得
+		const seasonBtn =
+		    document.getElementById("seasonBtn");
+
+		const categoryBtn =
+		    document.getElementById("categoryBtn");
+
+		// 表示エリア取得
+		const seasonArea =
+		    document.getElementById("seasonArea");
+
+		const categoryArea =
+		    document.getElementById("categoryArea");
+
+		// 季節ボタン
+		seasonBtn.addEventListener("click", () => {
+
+		    seasonArea.style.display = "block";
+
+		    categoryArea.style.display = "none";
+
+		});
+
+		// カテゴリボタン
+		categoryBtn.addEventListener("click", () => {
+
+		    seasonArea.style.display = "none";
+
+		    categoryArea.style.display = "block";
+
+		});
+
+		</script>
+
 </body>
 </html>

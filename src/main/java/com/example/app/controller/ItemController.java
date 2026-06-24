@@ -284,6 +284,10 @@ public class ItemController {
 			}
 
 		}
+
+		//テスト
+		System.out.println(seasonData);
+
 		//HTMLへ渡す（画面の表示準備と遷移）
 		model.addAttribute("selectedSeason", season);
 		model.addAttribute("selectedCategory", category);
