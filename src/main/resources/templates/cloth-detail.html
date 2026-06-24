@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>服の詳細ページ</title>
+</head>
+<body>
+
+	<h1>👗 お洋服詳細</h1>
+
+	<img
+	th:src="@{/uploads/{img}(img=${cloth.imageName})}"
+	style="max-width:300px;"
+	>
+
+	<h2 th:text="${cloth.name}"></h2>
+
+	<p>
+	🏷️ ブランド：
+	<span th:text="${cloth.brand}"></span>
+	</p>
+
+	<p>
+	🤎 カラー：
+	<span th:text="${cloth.color}"></span>
+	</p>
+
+	<p>
+	💰 価格：
+	¥<span th:text="${cloth.price}"></span>
+	</p>
+
+	<hr>
+
+	<h3>🌤️ 着用シーズン</h3>
+
+	<p>
+	<span th:if="${cloth.spring}">🌸春 </span>
+	<span th:if="${cloth.summer}">☀️夏 </span>
+	<span th:if="${cloth.autumn}">🍁秋 </span>
+	<span th:if="${cloth.winter}">❄️冬 </span>
+	</p>
+
+	<p th:if="${cloth.favorite}">
+	⭐ お気に入り登録済み
+	</p>
+
+	<hr>
+
+	<button>💰 売りたいリストに追加</button>
+
+	<a href="#">
+	<button>✏️ 編集</button>
+	</a>
+
+	<!--			th:action で指定した削除URLへ method="post"（ポスト送信）する-->
+	<!--th:action のおかげで、ボタン一つ一つに「〇番の服を消してね！」という専用の宛先が書き込まれる。-->
+
+	<form th:action="@{/delete/{id}(id=${cloth.id})}"
+	      method="post"
+	      onsubmit="return confirm('本当に削除しますか？')">
+		 
+
+	    <button type="submit">
+	        🗑️ この服を削除する
+	    </button>
+		
+		<!-- onsubmit="return confirm('本当に削除しますか？')"=はJavaScriptという、
+			ブラウザ側で動く言語のコードconfirm('')：送信ボタンが押された時（onsubmit）」にポップアップを出す
+			ブラウザに「OK」と「キャンセル」のボタンがついた小さな確認ダイアログ表示
+			()のなかはシングルクオーテーション-->
+
+
+	</form>
+
+
+	<br><br>
+
+	<a th:href="@{/cloth}">
+	← 一覧へ戻る
+	</a>
+
+</body>
+</html>

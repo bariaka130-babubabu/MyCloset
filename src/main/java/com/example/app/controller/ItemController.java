@@ -302,7 +302,7 @@ public class ItemController {
 
 	@GetMapping("/cloth/detail/{id}")
 	public String showDetail(
-			@PathVariable Integer id,
+			@PathVariable Integer id, //URLの数字を受け取る
 			Model model) {
 
 		Cloth cloth = mapper.findById(id);

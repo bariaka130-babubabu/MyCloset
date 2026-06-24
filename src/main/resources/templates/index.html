@@ -57,17 +57,12 @@
 <!--{aaa} ：後から変数をはめ込むための「空箱」-->
 <!--(aaa=${cloth.imageName}) ：「空箱 aaa に、DBから取ってきたファイル名を入れてね」という指示-->
 <!--${cloth.imageName}=DBのimage_name受け取れる-->
-			<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" alt="画像一覧" style="max-width: 200px;" />
-<!--			th:action で指定した削除URLへ method="post"（ポスト送信）する-->
-<!--th:action のおかげで、ボタン一つ一つに「〇番の服を消してね！」という専用の宛先が書き込まれる。-->
-			<form th:action="@{/delete/{id}(id=${cloth.id})}" method="post" onsubmit="return confirm('本当に削除しますか')">
-				<button type="submit">削除</button>
-<!-- onsubmit="return confirm('本当に削除しますか？')"=はJavaScriptという、
-	ブラウザ側で動く言語のコードconfirm('')：送信ボタンが押された時（onsubmit）」にポップアップを出す
-	ブラウザに「OK」と「キャンセル」のボタンがついた小さな確認ダイアログ表示
-	()のなかはシングルクオーテーション-->
-	
-		</form>
+	<a th:href="@{/cloth/detail/{id}(id=${cloth.id})}">		
+	<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" 
+		alt="画像一覧" 
+		style="max-width: 200px;" />
+	</a>
+
 	</div></div> <hr />
 <!--	 <div> タグは「ただの透明な箱」＝が麺大きくブロック分けしたいとき使う
 	画面のレイアウトを「左側エリア」と「右側エリア」に分けたいときやパーツをグループごとにガバッとまとめて四角い箱に入れたいときに使います-->
