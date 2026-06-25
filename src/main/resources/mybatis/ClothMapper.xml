@@ -347,4 +347,20 @@ where id = #{id}
     set is_sell = false
     where id = #{id}
 </update>
+
+<!--お気に入り追加-->
+<update id="updateFavoriteStatus">
+update item
+set is_favorite = true
+where id = #{id}
+</update>
+
+<!--お気に入り解除-->
+<update id="unfavorite">
+update item
+set is_favorite = false
+where id = #{id}
+</update>
+
+
 </mapper>

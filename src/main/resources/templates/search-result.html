@@ -75,20 +75,27 @@
 		      ❤️ お気に入り：
 		      <span th:text="${cloth.favorite ? '登録済み' : '未登録'}"></span>
 		  </p>
-		  <form>
-		      <button>
+		  <form
+		      th:if="${cloth.favorite}"
+		      th:action="@{/cloth/unfavorite/{id}(id=${cloth.id})}"
+		      method="post">
 
-		          <span th:if="${cloth.favorite}">
-		              💔 お気に入り解除
-		          </span>
-
-		          <span th:unless="${cloth.favorite}">
-		              ❤️ お気に入り登録
-		          </span>
-
+		      <button type="submit">
+		          💔 お気に入り解除
 		      </button>
+
 		  </form>
-		  
+
+		  <form
+		      th:unless="${cloth.favorite}"
+		      th:action="@{/cloth/favorite/{id}(id=${cloth.id})}"
+		      method="post">
+
+		      <button type="submit">
+		          ❤️ お気に入り登録
+		      </button>
+
+		  </form>		  
 		  <form
 		      th:if="${cloth.sell}"
 		      th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"

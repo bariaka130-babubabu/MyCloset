@@ -374,4 +374,22 @@ public class ItemController {
 
 		return "sell-list";
 	}
+
+	//お気に入り登録
+	@PostMapping("/cloth/favorite/{id}")
+	public String favorite(@PathVariable Integer id) {
+
+		mapper.updateFavoriteStatus(id);
+
+		return "redirect:/cloth/detail/" + id;
+	}
+
+	//お気に入り解除
+	@PostMapping("/cloth/unfavorite/{id}")
+	public String unfavorite(@PathVariable Integer id) {
+
+		mapper.unfavorite(id);
+
+		return "redirect:/cloth/detail/" + id;
+	}
 }

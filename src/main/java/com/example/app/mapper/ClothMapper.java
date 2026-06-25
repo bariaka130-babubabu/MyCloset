@@ -67,6 +67,10 @@ public interface ClothMapper {
 	Cloth findById(Integer id);
 
 	//お気に入りリスト追加
+	void updateFavoriteStatus(Integer id);
+
+	//お気に入りリスト解除
+	void unfavorite(Integer id);
 
 	//売りたいリスト追加
 	void updateSellStatus(Integer id);
