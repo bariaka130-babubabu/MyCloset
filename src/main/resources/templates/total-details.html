@@ -2,256 +2,260 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/analyze.css}">
 <title>クローゼット分析-MyCloset</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-	<header>
-		<h1>クローゼット分析</h1>
-		<a th:href="@{/cloth}">一覧に戻る</a>
+	<body>
+
+	<header class="analyze-header">
+		<h1>MyCloset Analysis</h1>
+		<p>Closet Report</p>
+		<a th:href="@{/cloth}" class="back-link">← 一覧に戻る</a>
 	</header>
-	<hr/> <!--テーマの切り替え 一本の線がはいる-->
-	
-	<div>
-		<button type="button" id="seasonBtn">🌸 季節別で見る</button>
-		<button type="button" id="categoryBtn">👚 カテゴリ別で見る</button>
-	</div><!--文章の改行　線は入らず、「行が下にずれるだけ。-->
-	<br/>
-	<div id="seasonArea" style="display: none;">
-		<h3>🌸 季節別分析</h3>
 
-		   <canvas id="seasonChart"></canvas>
-		   
-		   <div th:each="item : ${seasonData}">
-			<p>
-			      <span th:switch="${item.season}">
+	<main class="analyze-page">
 
-			          <span th:case="'春'">🌸 春</span>
-			          <span th:case="'夏'">☀️ 夏</span>
-			          <span th:case="'秋'">🍁 秋</span>
-			          <span th:case="'冬'">❄️ 冬</span>
+		<section class="switch-card">
+			<button type="button" id="seasonBtn">🌸 季節別で見る</button>
+			<button type="button" id="categoryBtn">👚 カテゴリ別で見る</button>
+		</section>
 
-			      </span>
+		<section id="seasonArea" class="analysis-card" style="display: none;">
+			<div class="section-title">
+				<p class="section-subtitle">Season</p>
+				<h2>季節別分析</h2>
+			</div>
 
-			      ：
-		           <span th:text="${item.totalCount}"></span>着　
-		           ¥<span th:text="${item.totalPrice}"></span>
-		       </p>
-		   </div>
+			<div class="chart-box">
+				<canvas id="seasonChart"></canvas>
+			</div>
 
-	</div>
-	<div id="categoryArea">
-	    <h3>👚 カテゴリ別分析</h3>
+			<div class="data-list">
+				<div class="data-row" th:each="item : ${seasonChartData}">
+					<span th:switch="${item.season}">
+						<span th:case="'春'">🌸 春</span>
+						<span th:case="'夏'">☀️ 夏</span>
+						<span th:case="'秋'">🍁 秋</span>
+						<span th:case="'冬'">❄️ 冬</span>
+					</span>
 
-	    <canvas id="categoryChart"></canvas>
+					<strong>
+						<span th:text="${item.totalCount}"></span>着　
+						¥<span th:text="${item.totalPrice}"></span>
+					</strong>
+				</div>
+			</div>
+		</section>
 
-	    <div th:each="item : ${categoryData}">
-	        <p>
-				<span th:switch="${item.category}">
+		<section id="categoryArea" class="analysis-card">
+			<div class="section-title">
+				<p class="section-subtitle">Category</p>
+				<h2>カテゴリ別分析</h2>
+			</div>
 
-				          <span th:case="'tops'">👚 トップス</span>
-				          <span th:case="'pants'">👖 パンツ</span>
-				          <span th:case="'skirt'">👧 スカート</span>
-				          <span th:case="'onepiece'">👗ワンピース</span>
-				          <span th:case="'outer'">🧥 アウター</span>
-				          <span th:case="'shoes'">👟 シューズ</span>
-				          <span th:case="'bag'">👜 バッグ</span>
+			<div class="chart-box">
+				<canvas id="categoryChart"></canvas>
+			</div>
 
-				      </span>
+			<div class="data-list">
+				<div class="data-row" th:each="item : ${categoryData}">
+					<span th:switch="${item.category}">
+						<span th:case="'tops'">👚 トップス</span>
+						<span th:case="'pants'">👖 パンツ</span>
+						<span th:case="'skirt'">👧 スカート</span>
+						<span th:case="'onepiece'">👗 ワンピース</span>
+						<span th:case="'outer'">🧥 アウター</span>
+						<span th:case="'shoes'">👟 シューズ</span>
+						<span th:case="'bag'">👜 バッグ</span>
+						<span th:case="'others'">その他</span>
+					</span>
 
-				      ：
-	            <span th:text="${item.totalCount}"></span>
-				<span th:switch="${item.category}">
-				    <span th:case="'shoes'">足</span>
-				    <span th:case="'bag'">個</span>
-				    <span th:case="*">着</span>
-				</span>
-	            ¥<span th:text="${item.totalPrice}"></span>
-	        </p>
-	    </div>
-	</div>
-	
-	<hr />
-	
-	<div>
-	     <h3>🔍 ピンポイントでクローゼットを覗く</h3>
-		 <form th:action="@{/cloth/analyze}" method="get">
-			  
-	     	<select name="detailSeason">
-<!--　th:selected="${...}":今選んだものをリロードしても記憶しておく-->
-	        	<option value="spring"th:selected="${selectedSeason == 'spring'}">春🌸</option>
-	        	<option value="summer"th:selected="${selectedSeason == 'summer'}">夏☀️</option>
-	        	<option value="autumn"th:selected="${selectedSeason == 'autumn'}">秋🍁🍁</option>
-	       	 	<option value="winter"th:selected="${selectedSeason == 'winter'}">冬❄️</option>
-	     	</select>
-	        
-	     <span> × </span>
-	        
-	     <select name="detailCategory">
-	       	<option value="tops"th:selected="${selectedCategory == 'tops'}">トップス👚</option>
-	        <option value="pants"th:selected="${selectedCategory == 'pants'}">パンツ👖</option>
-	        <option value="skirt"th:selected="${selectedCategory == 'skirt'}">スカート👧</option>
-			<option value="onepiece" th:selected="${selectedCategory == 'onepiece'}">ワンピース👗</option>
-	        <option value="outer"th:selected="${selectedCategory == 'outer'}">アウター🧥</option>
-			<option value="shoes" th:selected="${selectedCategory == 'shoes'}">シューズ👟</option>
-			  <option value="bag" th:selected="${selectedCategory == 'bag'}">バッグ👜</option>
-	      </select>
+					<strong>
+						<span th:text="${item.totalCount}"></span>
+						<span th:switch="${item.category}">
+							<span th:case="'shoes'">足</span>
+							<span th:case="'bag'">個</span>
+							<span th:case="*">着</span>
+						</span>
+						¥<span th:text="${item.totalPrice}"></span>
+					</strong>
+				</div>
+			</div>
+		</section>
 
-	     <button type="submit">確認する</button>
-		 
-		 
-		 </form>
+		<section class="pinpoint-card">
+			<div class="section-title">
+				<p class="section-subtitle">Pick Up</p>
+				<h2>ピンポイントでクローゼットを覗く</h2>
+			</div>
 
-	     <div>
-<!--　0はダミーデータでtotalPriceが表示されたら消える-->
-<!--　strongタグの中は全部太字-->
-<!--th:text は中身を丸ごと上書きしてしまうのでspanタグで囲う-->
-<p>
-      所持数：
-      <strong>
-          <span th:text="${totalCount}">0</span>
-		  
-		  <span th:switch="${selectedCategory}">
-		             <span th:case="'shoes'">足</span>
-		             <span th:case="'bag'">個</span>
-		             <span th:case="*">着</span>
-		         </span>
-      </strong>
-  </p>
+			<form th:action="@{/cloth/analyze}" method="get" class="pinpoint-form">
+				<select name="detailSeason">
+					<option value="spring" th:selected="${selectedSeason == 'spring'}">春🌸</option>
+					<option value="summer" th:selected="${selectedSeason == 'summer'}">夏☀️</option>
+					<option value="autumn" th:selected="${selectedSeason == 'autumn'}">秋🍁</option>
+					<option value="winter" th:selected="${selectedSeason == 'winter'}">冬❄️</option>
+				</select>
 
-  <p>
-      総額：
-      <strong>
-          ¥<span th:text="${totalPrice}">0</span>
-      </strong>
-  </p>
+				<span class="cross">×</span>
 
-	     </div>
-	    </div>
-	
+				<select name="detailCategory">
+					<option value="tops" th:selected="${selectedCategory == 'tops'}">トップス👚</option>
+					<option value="pants" th:selected="${selectedCategory == 'pants'}">パンツ👖</option>
+					<option value="skirt" th:selected="${selectedCategory == 'skirt'}">スカート👧</option>
+					<option value="onepiece" th:selected="${selectedCategory == 'onepiece'}">ワンピース👗</option>
+					<option value="outer" th:selected="${selectedCategory == 'outer'}">アウター🧥</option>
+					<option value="shoes" th:selected="${selectedCategory == 'shoes'}">シューズ👟</option>
+					<option value="bag" th:selected="${selectedCategory == 'bag'}">バッグ👜</option>
+				</select>
+
+				<button type="submit">確認する</button>
+			</form>
+
+			<div class="result-box">
+				<p>
+					<span>所持数</span>
+					<strong>
+						<span th:text="${totalCount}">0</span>
+						<span th:switch="${selectedCategory}">
+							<span th:case="'shoes'">足</span>
+							<span th:case="'bag'">個</span>
+							<span th:case="*">着</span>
+						</span>
+					</strong>
+				</p>
+
+				<p>
+					<span>総額</span>
+					<strong>¥<span th:text="${totalPrice}">0</span></strong>
+				</p>
+			</div>
+		</section>
+
+	</main>	
 <!--		ThymeleafからJSへ渡す-->
-		<script th:inline="javascript">
+<script th:inline="javascript">
 
-		const seasonData = [[${seasonChartData}]];
-		
-		const labels =
-		    seasonData.map(item => item.season);
+	const seasonData = [[${seasonChartData}]];
 
-		const counts =
-		    seasonData.map(item => item.totalCount);
+	const labels =
+		seasonData.map(item => item.season);
 
-		new Chart(
-		    document.getElementById("seasonChart"),
-		    {
-		        type: "pie",
+	const counts =
+		seasonData.map(item => item.totalCount);
 
-		        data: {
-		            labels: labels,
+	new Chart(
+		document.getElementById("seasonChart"),
+		{
+			type: "pie",
 
-		            datasets: [{
-		                data: counts
-		            }]
-		        }
-		    }
-		);
+			data: {
+				labels: labels,
 
-		console.log("テスト:",seasonData);
-		
-		const categoryData = [[${categoryData}]];
-		
-		const categoryLabels =
-		    categoryData.map(item => {
+				datasets: [{
+					data: counts,
+					backgroundColor: [
+						"#e8b7aa",
+						"#efd8a5",
+						"#c89f8c",
+						"#b8c3d6"
+					],
+					borderColor: "#fffaf7",
+					borderWidth: 3
+				}]
+			}
+		}
+	);
 
-		        switch(item.category){
-		            case "tops":
-		                return "トップス";
-		            case "pants":
-		                return "パンツ";
-		            case "skirt":
-		                return "スカート";
-		            case "outer":
-		                return "アウター";
-		            case "onepiece":
-		                return "ワンピース";
-		            case "shoes":
-		                return "シューズ";
-		            case "bag":
-		                return "バッグ";
-		            default:
-		                return item.category;
-		        }
-		    });
+	console.log("テスト:", seasonData);
 
-		const categoryCounts =
-		    categoryData.map(item => item.totalCount);
+	const categoryData = [[${categoryData}]];
 
-		console.log(categoryData);
-		
-		
-		new Chart(
-		    document.getElementById("categoryChart"),
-		    {
-		        type: "bar",
+	const categoryLabels =
+		categoryData.map(item => {
 
-		        data: {
-		            labels: categoryLabels,
-
-		            datasets: [{
-		                label: "所持数",
-		                data: categoryCounts
-		            }]
-		        },
-
-		        options: {
-		            responsive: true,
-
-		            scales: {
-		                y: {
-		                    beginAtZero: true,
-							ticks: {
-							    stepSize: 1,
-								precision: 0
-							}
-		                }
-		            }
-		        }
-		    }
-		);
-
-		// ボタン取得
-		const seasonBtn =
-		    document.getElementById("seasonBtn");
-
-		const categoryBtn =
-		    document.getElementById("categoryBtn");
-
-		// 表示エリア取得
-		const seasonArea =
-		    document.getElementById("seasonArea");
-
-		const categoryArea =
-		    document.getElementById("categoryArea");
-
-		// 季節ボタン
-		seasonBtn.addEventListener("click", () => {
-
-		    seasonArea.style.display = "block";
-
-		    categoryArea.style.display = "none";
-
+			switch(item.category){
+				case "tops":
+					return "トップス";
+				case "pants":
+					return "パンツ";
+				case "skirt":
+					return "スカート";
+				case "outer":
+					return "アウター";
+				case "onepiece":
+					return "ワンピース";
+				case "shoes":
+					return "シューズ";
+				case "bag":
+					return "バッグ";
+				default:
+					return item.category;
+			}
 		});
 
-		// カテゴリボタン
-		categoryBtn.addEventListener("click", () => {
+	const categoryCounts =
+		categoryData.map(item => item.totalCount);
 
-		    seasonArea.style.display = "none";
+	console.log(categoryData);
 
-		    categoryArea.style.display = "block";
+	new Chart(
+		document.getElementById("categoryChart"),
+		{
+			type: "bar",
 
-		});
+			data: {
+				labels: categoryLabels,
 
-		</script>
+				datasets: [{
+					label: "所持数",
+					data: categoryCounts,
+					backgroundColor: "#c8a399",
+					borderRadius: 12
+				}]
+			},
 
+			options: {
+				responsive: true,
+
+				scales: {
+					y: {
+						beginAtZero: true,
+						ticks: {
+							stepSize: 1,
+							precision: 0
+						}
+					}
+				}
+			}
+		}
+	);
+
+	const seasonBtn =
+		document.getElementById("seasonBtn");
+
+	const categoryBtn =
+		document.getElementById("categoryBtn");
+
+	const seasonArea =
+		document.getElementById("seasonArea");
+
+	const categoryArea =
+		document.getElementById("categoryArea");
+
+	seasonBtn.addEventListener("click", () => {
+		seasonArea.style.display = "block";
+		categoryArea.style.display = "none";
+	});
+
+	categoryBtn.addEventListener("click", () => {
+		seasonArea.style.display = "none";
+		categoryArea.style.display = "block";
+	});
+
+</script>
 </body>
 </html>

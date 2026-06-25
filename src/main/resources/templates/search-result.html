@@ -1,147 +1,116 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
+<link rel="stylesheet" th:href="@{/css/search.css}">
 <meta charset="UTF-8">
 <title>検索結果一覧</title>
 </head>
 <body>
-	<header>
-		<h1>MyCloset - 検索結果</h1>
+	<header class="result-header">
+		<h1>MyCloset</h1>
+		<p>Search Result</p>
 <!--	nav =(ナビゲーション：ページ移動の案内所）-->
-		<nav>
-		<a th:href="@{/cloth}" class="back-btn">クローゼット一覧に戻る</a>			</a>
-		</nav>
+	<nav>
+	<a th:href="@{/cloth}" class="back-btn">← クローゼット一覧に戻る</a>
+	</nav>>
 	</header>
 
-	<div>
+<section class="result-section">
+	<div  class="section-title">
+	<p class="section-subtitle">Selected Closet</p>
 		<h2>見つかったお洋服</h2>
+	</div>
 <!--th:if="..."：条件が正しい(true)=この<div>全体を表示する-->
 <!--${#lists.isEmpty(clothes)}：clothes(服のリストデータ)が空(empty)かどうかをチェック-->
 <!--	#lists=Thymeleafが最初から用意してくれている(ユーティリティオブジェクト)-->
 <!--　　${}=model.addAttribute("clothes", ...)のclothes表示のため-->
-		<div th:if="${#lists.isEmpty(clothes)}">
-			<p>指定されたカテゴリのお洋服はまだ登録されていません。</p>
-		</div>
+	<div class="empty-card" th:if="${#lists.isEmpty(clothes)}">
+		<p>条件に合うお洋服はまだ登録されていません。</p>
+	</div>
 <!-- th:unless="..."：th:ifの真逆で、条件が「成り立たない(false)」時表示-->
 <!--もし服のリストが空っぽではない（＝データが1件以上ある）なら、以下の処理をする」-->
-		<div th:unless="${#lists.isEmpty(clothes)}">
+	<div class="result-grid" th:unless="${#lists.isEmpty(clothes)}">
 <!--	th:each="個別名 : ${リスト名}"：javaでいうfor文（繰り返し処理-->
-			<div th:each="cloth : ${clothes}" style="margin-bottom: 30px;">
+	<div class="result-card" th:each="cloth : ${clothes}">
+
 <!--	ブラウザ（ChromeやSafariなど）に対して、「この画像が欲しければ、
 		このURL（住所）にアクセスして画像をとってきてね」と指示を出している-->
-			<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" alt="服の画像" 
-			style="max-width: 200px;" />
-				
-<!--	服の情報を表示する段落の開始です。-->
+		<a th:href="@{/cloth/detail/{id}(id=${cloth.id})}" class="image-link">
+		<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" alt="服の画像">
+		</a>
+		
+	<div class="card-info">
 		<h3>
-       		👗 <span th:text="${cloth.name}"></span>
-   		</h3>
-		<p>
-		      🎨 カラー：
-		      <span th:text="${cloth.color}"></span>
-		  </p>
+			<span th:text="${cloth.name}">服の名前</span>
+		</h3>
 
-		  <p>
-		      🏷️ ブランド：
-		      <span th:text="${cloth.brand}"></span>
-		  </p>
+		<p class="price">
+			¥<span th:text="${cloth.price}">0</span>
+		</p>
 
-		  <p>
-		      👚 カテゴリ：
+						<div class="mini-info">
+							<p>🎨 <span th:text="${cloth.color}">カラー</span></p>
+							<p>🏷️ <span th:text="${cloth.brand}">ブランド</span></p>
+						</div>
 
-		      <span th:if="${cloth.category == 'tops'}">トップス👚</span>
-		      <span th:if="${cloth.category == 'pants'}">パンツ👖</span>
-		      <span th:if="${cloth.category == 'skirt'}">スカート👧</span>
-		      <span th:if="${cloth.category == 'onepiece'}">ワンピース👗</span>
-		      <span th:if="${cloth.category == 'outer'}">アウター🧥</span>
-		      <span th:if="${cloth.category == 'shoes'}">シューズ👟</span>
-		      <span th:if="${cloth.category == 'bag'}">バッグ👜</span>
+						<div class="tag-area">
+							<span th:if="${cloth.category == 'tops'}">トップス</span>
+							<span th:if="${cloth.category == 'pants'}">パンツ</span>
+							<span th:if="${cloth.category == 'skirt'}">スカート</span>
+							<span th:if="${cloth.category == 'onepiece'}">ワンピース</span>
+							<span th:if="${cloth.category == 'outer'}">アウター</span>
+							<span th:if="${cloth.category == 'shoes'}">シューズ</span>
+							<span th:if="${cloth.category == 'bag'}">バッグ</span>
+							<span th:if="${cloth.category == 'others'}">その他</span>
+						</div>
 
-		  </p>
-		  <p>
-		      🌸季節：
+						<div class="season-tags">
+							<span th:if="${cloth.spring}">🌸 春</span>
+							<span th:if="${cloth.summer}">☀️ 夏</span>
+							<span th:if="${cloth.autumn}">🍁 秋</span>
+							<span th:if="${cloth.winter}">❄️ 冬</span>
+						</div>
 
-		      <span th:if="${cloth.spring}">春🌸 </span>
-		      <span th:if="${cloth.summer}">夏☀️ </span>
-		      <span th:if="${cloth.autumn}">秋🍁 </span>
-		      <span th:if="${cloth.winter}">冬❄️ </span>
-		  </p>
-		  <p>
-		      💰 価格：
-		      ¥<span th:text="${cloth.price}"></span>
-		  </p>
+						<p class="favorite-text">
+							❤️ <span th:text="${cloth.favorite ? 'お気に入り登録済み' : '未登録'}"></span>
+						</p>
 
-		  <p>
-		      ❤️ お気に入り：
-		      <span th:text="${cloth.favorite ? '登録済み' : '未登録'}"></span>
-		  </p>
-		  <form
-		      th:if="${cloth.favorite}"
-		      th:action="@{/cloth/unfavorite/{id}(id=${cloth.id})}"
-		      method="post">
+						<div class="button-area">
 
-		      <button type="submit">
-		          💔 お気に入り解除
-		      </button>
+							<form th:if="${cloth.favorite}"
+								  th:action="@{/cloth/unfavorite/{id}(id=${cloth.id})}"
+								  method="post">
+								<button type="submit" class="sub-btn">💔 解除</button>
+							</form>
 
-		  </form>
+							<form th:unless="${cloth.favorite}"
+								  th:action="@{/cloth/favorite/{id}(id=${cloth.id})}"
+								  method="post">
+								<button type="submit" class="main-btn">❤️ 登録</button>
+							</form>
 
-		  <form
-		      th:unless="${cloth.favorite}"
-		      th:action="@{/cloth/favorite/{id}(id=${cloth.id})}"
-		      method="post">
+							<form th:if="${cloth.sell}"
+								  th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"
+								  method="post">
+								<button type="submit" class="sub-btn">❌ 売却解除</button>
+							</form>
 
-		      <button type="submit">
-		          ❤️ お気に入り登録
-		      </button>
+							<form th:unless="${cloth.sell}"
+								  th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
+								  method="post">
+								<button type="submit" class="main-btn">💰 売却候補</button>
+							</form>
 
-		  </form>		  
-		  <form
-		      th:if="${cloth.sell}"
-		      th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"
-		      method="post">
+							<form th:action="@{/delete/{id}(id=${cloth.id})}"
+								  method="post"
+								  onsubmit="return confirm('本当に削除しますか？')">
+								<button type="submit" class="delete-btn">🗑️ 削除</button>
+							</form>
 
-		      <button type="submit">
-		          ❌ 売りたいリスト解除
-		      </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-		  </form>
-
-		  <form
-		      th:unless="${cloth.sell}"
-		      th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
-		      method="post">
-
-		      <button type="submit">
-		          💰 売りたいリスト追加
-		      </button>
-
-		  </form>
-		  
-		  <form th:action="@{/delete/{id}(id=${cloth.id})}"
-		        method="post"
-		        onsubmit="return confirm('本当に削除しますか？')">
-
-		      <button type="submit">
-		          🗑️ 削除
-		      </button>
-
-		  </form>
-<!--		  テスト-->
-		<p th:text="${cloth.spring}"></p>
-		<p th:text="${cloth.favorite}"></p>
-
-<!-- hr/：服と服の間に区切り線（横線）を引いています。-->
-			<hr/>	
-				
-		</div>
-		
-		
-		
-		</div>
-	
-	
-	
-	
-</body>
-</html>
+		</body>

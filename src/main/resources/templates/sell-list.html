@@ -2,73 +2,89 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/sell-list.css}">
 <title>売りたいリスト</title>
 </head>
 <body>
 
-	<h1>💰 売りたいリスト</h1>
 
-	<a th:href="@{/cloth}">
-	    一覧へ戻る
-	</a>
-	
-	<h2>📊 売却予定まとめ</h2>
+	<header class="sell-header">
+		<h1>Sell List</h1>
+		<p>売りたいリスト</p>
+		<a th:href="@{/cloth}" class="back-link">← 一覧へ戻る</a>
+	</header>
 
-	<p>
-	    💰 合計定価：
-	    ¥<span th:text="${totalPrice}"></span>
-	</p>
-	
-	<p th:if="${topsCount > 0}">
-	    👚 売りたい服：
-	    <span th:text="${topsCount}"></span>着
-	</p>
+	<main class="sell-page">
 
-	<p th:if="${shoesCount > 0}">
-	    👟 売りたいシューズ：
-	    <span th:text="${shoesCount}"></span>足
-	</p>
+		<section class="summary-card">
+			<div class="section-title">
+				<p class="section-subtitle">Summary</p>
+				<h2>売却予定まとめ</h2>
+			</div>
 
-	<p th:if="${bagCount > 0}">
-	    👜 売りたいバッグ：
-	    <span th:text="${bagCount}"></span>個
-	</p>
+			<div class="summary-grid">
+				<div class="summary-item">
+					<span>合計定価</span>
+					<strong>¥<span th:text="${totalPrice}">0</span></strong>
+				</div>
 
-	<hr>
+				<div class="summary-item" th:if="${topsCount > 0}">
+					<span>売りたい服</span>
+					<strong><span th:text="${topsCount}">0</span>着</strong>
+				</div>
 
-	<div th:each="cloth : ${sellClothes}">
+				<div class="summary-item" th:if="${shoesCount > 0}">
+					<span>売りたいシューズ</span>
+					<strong><span th:text="${shoesCount}">0</span>足</strong>
+				</div>
 
-	    <img
-	        th:src="@{/uploads/{img}(img=${cloth.imageName})}"
-	        style="max-width:200px;"
-	    >
+				<div class="summary-item" th:if="${bagCount > 0}">
+					<span>売りたいバッグ</span>
+					<strong><span th:text="${bagCount}">0</span>個</strong>
+				</div>
+			</div>
+		</section>
 
-		<p>
-		    <strong>商品名：</strong>
-		    <span th:text="${cloth.name}"></span>
-		</p>
+		<section class="sell-section">
+			<div class="section-title">
+				<p class="section-subtitle">Items</p>
+				<h2>登録中のお洋服</h2>
+			</div>
 
-		<p>
-		    <strong>ブランド：</strong>
-		    <span th:text="${cloth.brand}"></span>
-		</p>
+			<div class="empty-card" th:if="${#lists.isEmpty(sellClothes)}">
+				<p>売りたいリストに登録されているお洋服はありません。</p>
+			</div>
 
-		<p>
-		    <strong>定価：</strong>
-		    ¥<span th:text="${cloth.price}"></span>
-		</p>
-		
-		<form th:action="@{/cloth/sell-list/unsell/{id}(id=${cloth.id})}"
-		      method="post">
+			<div class="sell-grid" th:unless="${#lists.isEmpty(sellClothes)}">
+				<div class="sell-card" th:each="cloth : ${sellClothes}">
 
-		    <button type="submit">
-		        ❌ 売りたいリスト解除
-		    </button>
+					<a th:href="@{/cloth/detail/{id}(id=${cloth.id})}">
+						<img th:src="@{/uploads/{img}(img=${cloth.imageName})}" alt="服の画像">
+					</a>
 
-		</form>
+					<div class="sell-info">
+						<h3 th:text="${cloth.name}">商品名</h3>
 
-	    <hr>
+						<p>
+							<span>Brand</span>
+							<strong th:text="${cloth.brand}">ブランド</strong>
+						</p>
 
-	</div>
-</body>
-</html>
+						<p>
+							<span>Price</span>
+							<strong>¥<span th:text="${cloth.price}">0</span></strong>
+						</p>
+
+						<form th:action="@{/cloth/sell-list/unsell/{id}(id=${cloth.id})}"
+							  method="post">
+							<button type="submit">❌ リスト解除</button>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	</body>
