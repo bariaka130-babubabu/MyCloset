@@ -66,6 +66,10 @@ public interface ClothMapper {
 	//お気に入りリスト追加
 
 	//売りたいリスト追加
+	void updateSellStatus(Integer id);
+
+	//売りたいリスト解除
+	void unsell(Integer id);
 
 	//コーディネート登録
 }

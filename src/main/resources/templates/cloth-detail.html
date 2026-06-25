@@ -45,14 +45,28 @@
 	⭐ お気に入り登録済み
 	</p>
 	
-	<p>
+	<!--<p>
 	売りたい状態：
 	<span th:text="${cloth.sell}"></span>
-	</p>
+	</p>-->
 
 	<hr>
-
-	<button>💰 売りたいリストに追加</button>
+	
+	<form 
+		th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
+		method="post">
+	
+	<button 
+		type="submit"
+		th:if="${!cloth.sell}">
+		💰 売りたいリストに追加
+	</button>
+	
+	</form>
+	
+	<p th:if="${cloth.sell}">
+		    ✅ 売りたいリストに登録済み
+	</p>
 
 	<a href="#">
 	<button>✏️ 編集</button>

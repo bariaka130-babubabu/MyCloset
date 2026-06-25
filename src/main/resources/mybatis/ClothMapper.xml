@@ -292,4 +292,13 @@ from item
 where id = #{id}
 
 </select>
+
+<!--売りたいリスト追加機能-->
+<update id="updateSellStatus">
+
+update item
+set is_sell = true
+where id = #{id}
+
+</update>
 </mapper>

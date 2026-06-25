@@ -312,4 +312,13 @@ public class ItemController {
 		return "cloth-detail";
 	}
 
+	//売りたいリスト追加
+	@PostMapping("/cloth/sell/{id}")
+	public String addSellList(
+			@PathVariable Integer id) {
+
+		mapper.updateSellStatus(id);
+
+		return "redirect:/cloth/detail/" + id;
+	}
 }
