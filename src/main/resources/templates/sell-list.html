@@ -11,6 +11,30 @@
 	<a th:href="@{/cloth}">
 	    一覧へ戻る
 	</a>
+	
+	<h2>📊 売却予定まとめ</h2>
+
+	<p>
+	    💰 合計定価：
+	    ¥<span th:text="${totalPrice}"></span>
+	</p>
+	
+	<p th:if="${topsCount > 0}">
+	    👚 売りたい服：
+	    <span th:text="${topsCount}"></span>着
+	</p>
+
+	<p th:if="${shoesCount > 0}">
+	    👟 売りたいシューズ：
+	    <span th:text="${shoesCount}"></span>足
+	</p>
+
+	<p th:if="${bagCount > 0}">
+	    👜 売りたいバッグ：
+	    <span th:text="${bagCount}"></span>個
+	</p>
+
+	<hr>
 
 	<div th:each="cloth : ${sellClothes}">
 

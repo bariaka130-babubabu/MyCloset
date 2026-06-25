@@ -337,6 +337,28 @@ public class ItemController {
 
 		List<Cloth> sellClothes = mapper.findSellList();
 
+		int totalPrice = 0;
+		int topsCount = 0;
+		int shoesCount = 0;
+		int bagCount = 0;
+
+		for (Cloth cloth : sellClothes) {
+
+			totalPrice += cloth.getPrice();
+
+			if ("shoes".equals(cloth.getCategory())) {
+				shoesCount++;
+			} else if ("bag".equals(cloth.getCategory())) {
+				bagCount++;
+			} else {
+				topsCount++;
+			}
+		}
+
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("topsCount", topsCount);
+		model.addAttribute("shoesCount", shoesCount);
+		model.addAttribute("bagCount", bagCount);
 		model.addAttribute("sellClothes", sellClothes);
 
 		return "sell-list";
