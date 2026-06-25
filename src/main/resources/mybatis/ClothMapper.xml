@@ -286,7 +286,8 @@ select
     is_spring AS spring,
     is_summer AS summer,
     is_autumn AS autumn,
-    is_winter AS winter
+    is_winter AS winter,
+    is_sell AS sell
 from item
 where id = #{id}
 

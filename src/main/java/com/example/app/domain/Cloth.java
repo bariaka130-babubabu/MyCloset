@@ -37,6 +37,9 @@ public class Cloth {
 	private boolean autumn;
 	private boolean winter;
 
+	//売りたいリスト追加
+	private Boolean sell;
+
 }
 
 /*「まだ何も選んでない状態（null）」にしたいならラッパークラスのBoolean
