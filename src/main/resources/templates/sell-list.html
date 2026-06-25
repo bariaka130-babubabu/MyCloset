@@ -57,6 +57,15 @@
 		    <strong>定価：</strong>
 		    ¥<span th:text="${cloth.price}"></span>
 		</p>
+		
+		<form th:action="@{/cloth/sell-list/unsell/{id}(id=${cloth.id})}"
+		      method="post">
+
+		    <button type="submit">
+		        ❌ 売りたいリスト解除
+		    </button>
+
+		</form>
 
 	    <hr>
 

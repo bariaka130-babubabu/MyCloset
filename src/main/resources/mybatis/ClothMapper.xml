@@ -94,7 +94,21 @@ Cloth クラスに colors（List）がなくても、
 何の問題もなく resultType="Cloth" を指定していい-->
 
 <select  id="search" resultType="Cloth">
-select * from  item
+select
+    id,
+    name,
+    category,
+    color,
+    brand,
+    price,
+    image_name AS imageName,
+    is_favorite AS favorite,
+    is_spring AS spring,
+    is_summer AS summer,
+    is_autumn AS autumn,
+    is_winter AS winter,
+    is_sell AS sell
+from item
 <!--中身の <if> 条件が1つでも一致した場合のみ、
 SQLに WHERE というキーワードを自動で追加します。
 ex）WHERE category = 'シャツ' AND color IN ('Red')＝WHERE category 
