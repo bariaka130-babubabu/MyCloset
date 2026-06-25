@@ -53,6 +53,7 @@
 	<hr>
 	
 	<form 
+		th:if="${!cloth.sell}"
 		th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
 		method="post">
 	
@@ -67,6 +68,17 @@
 	<p th:if="${cloth.sell}">
 		    ✅ 売りたいリストに登録済み
 	</p>
+	
+	<form
+	    th:if="${cloth.sell}"
+	    th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"
+	    method="post">
+
+	    <button type="submit">
+	        ❌ 売りたいリストから外す
+	    </button>
+
+	</form>
 
 	<a href="#">
 	<button>✏️ 編集</button>

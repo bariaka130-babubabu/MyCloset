@@ -321,4 +321,13 @@ public class ItemController {
 
 		return "redirect:/cloth/detail/" + id;
 	}
+
+	//売りたいリストから解除
+	@PostMapping("/cloth/unsell/{id}")
+	public String unsell(@PathVariable Integer id) {
+
+		mapper.unsell(id);
+
+		return "redirect:/cloth/detail/" + id;
+	}
 }

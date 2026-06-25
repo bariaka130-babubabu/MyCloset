@@ -301,4 +301,12 @@ set is_sell = true
 where id = #{id}
 
 </update>
+
+<!--売りたいリストから解除-->
+
+<update id="unsell">
+    update item
+    set is_sell = false
+    where id = #{id}
+</update>
 </mapper>
