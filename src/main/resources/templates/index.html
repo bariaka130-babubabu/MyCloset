@@ -43,11 +43,13 @@
 	を1つのセットとして包む箱。服が3着ある＝この小さな箱が3個自動で出来る。-->
 	
 	<section class="closet-section">
-	<div class="section-title">
-		<p class="section-subtitle">My Collection</p>
-		<h2>お洋服一覧</h2>
+		<div class="section-title">
+			<p class="section-subtitle">My Collection</p>
+			<h2>お洋服一覧</h2>
+		</div>
 <!--		th:each のおかげで、画像とボタンがセットで人数分用意される。-->
-		<div th:each="cloth : ${clothes}">
+<div class="cloth-grid">
+	<div class="cloth-card" th:each="cloth : ${clothes}">
 <!--	max-width（最大の横幅）-->
 <!--★ブラウザから /uploads/** というURLでアクセスが来たら、
 	パソコン内の C:/Users/zd2U08/uploads/ フォルダの画像を見せてあげてね！」]
@@ -63,8 +65,7 @@
 <!--${cloth.imageName}=DBのimage_name受け取れる-->
 	<a th:href="@{/cloth/detail/{id}(id=${cloth.id})}">		
 	<img th:src="@{/uploads/{aaa}(aaa=${cloth.imageName})}" 
-		alt="画像一覧" 
-		style="max-width: 200px;" />
+		alt="画像一覧"  />
 	</a>
 
 			</div>
