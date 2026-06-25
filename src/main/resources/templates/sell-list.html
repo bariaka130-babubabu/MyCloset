@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>売りたいリスト</title>
+</head>
+<body>
+
+	<h1>💰 売りたいリスト</h1>
+
+	<a th:href="@{/cloth}">
+	    一覧へ戻る
+	</a>
+
+	<div th:each="cloth : ${sellClothes}">
+
+	    <img
+	        th:src="@{/uploads/{img}(img=${cloth.imageName})}"
+	        style="max-width:200px;"
+	    >
+
+		<p>
+		    <strong>商品名：</strong>
+		    <span th:text="${cloth.name}"></span>
+		</p>
+
+		<p>
+		    <strong>ブランド：</strong>
+		    <span th:text="${cloth.brand}"></span>
+		</p>
+
+		<p>
+		    <strong>定価：</strong>
+		    ¥<span th:text="${cloth.price}"></span>
+		</p>
+
+	    <hr>
+
+	</div>
+</body>
+</html>

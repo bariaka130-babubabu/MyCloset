@@ -330,4 +330,15 @@ public class ItemController {
 
 		return "redirect:/cloth/detail/" + id;
 	}
+
+	//売りたいリストページ表示
+	@GetMapping("/cloth/sell-list")
+	public String showSellList(Model model) {
+
+		List<Cloth> sellClothes = mapper.findSellList();
+
+		model.addAttribute("sellClothes", sellClothes);
+
+		return "sell-list";
+	}
 }

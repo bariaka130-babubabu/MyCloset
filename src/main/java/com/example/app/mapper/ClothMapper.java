@@ -13,6 +13,9 @@ public interface ClothMapper {
 	//最新順で洋服表示.全件取得
 	List<Cloth> findAllDesc();
 
+	//売りたいリストページ表示
+	List<Cloth> findSellList();
+
 	//洋服を登録する機能
 	void add(Cloth cloth);
 

@@ -32,8 +32,11 @@
 	
 <!--	<nav>タグ＝ページ移動のための大事なボタン-->
 	<nav>
-		<button type="button">お気に入りリスト</button>
-		<button type="button">売りたいリスト</button>
+		<a th:href="@{/cloth/sell-list}">
+		<button type="button">
+			 💰売りたいリスト
+		</button>
+		</a>
 	</nav>
 	</header>
 <!--1つ目の大きな div 箱：「お洋服一覧」というエリア全体を包む箱

@@ -293,6 +293,30 @@ where id = #{id}
 
 </select>
 
+<!--売りたいリスト表示-->
+
+<select id="findSellList" resultType="Cloth">
+
+select
+    id,
+    name,
+    category,
+    color,
+    brand,
+    price,
+    image_name AS imageName,
+    is_favorite AS favorite,
+    is_spring AS spring,
+    is_summer AS summer,
+    is_autumn AS autumn,
+    is_winter AS winter,
+    is_sell AS sell
+from item
+where is_sell = true
+order by id desc
+
+</select>
+
 <!--売りたいリスト追加機能-->
 <update id="updateSellStatus">
 
