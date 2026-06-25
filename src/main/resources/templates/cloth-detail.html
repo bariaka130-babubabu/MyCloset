@@ -2,136 +2,94 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/detail.css}">
 <title>服の詳細ページ</title>
 </head>
 <body>
 
-	<h1>👗 お洋服詳細</h1>
+	<div class="detail-page">
 
-	<img
-	th:src="@{/uploads/{img}(img=${cloth.imageName})}"
-	style="max-width:300px;"
-	>
+		<a th:href="@{/cloth}" class="back-link">← 一覧へ戻る</a>
 
-	<h2 th:text="${cloth.name}"></h2>
+		<section class="detail-card">
 
-	<p>
-	🏷️ ブランド：
-	<span th:text="${cloth.brand}"></span>
-	</p>
+			<div class="image-area">
+				<img th:src="@{/uploads/{img}(img=${cloth.imageName})}" alt="お洋服画像">
+			</div>
 
-	<p>
-	🤎 カラー：
-	<span th:text="${cloth.color}"></span>
-	</p>
+			<div class="info-area">
 
-	<p>
-	💰 価格：
-	¥<span th:text="${cloth.price}"></span>
-	</p>
+				<p class="page-subtitle">Item Detail</p>
+				<h1 th:text="${cloth.name}">お洋服名</h1>
 
-	<hr>
+				<div class="price">
+					¥<span th:text="${cloth.price}">0</span>
+				</div>
 
-	<h3>🌤️ 着用シーズン</h3>
+				<div class="info-list">
+					<p>🏷️ <span>ブランド</span><strong th:text="${cloth.brand}"></strong></p>
+					<p>🤎 <span>カラー</span><strong th:text="${cloth.color}"></strong></p>
+				</div>
 
-	<p>
-	<span th:if="${cloth.spring}">🌸春 </span>
-	<span th:if="${cloth.summer}">☀️夏 </span>
-	<span th:if="${cloth.autumn}">🍁秋 </span>
-	<span th:if="${cloth.winter}">❄️冬 </span>
-	</p>
+				<div class="season-box">
+					<h3>Wearing Season</h3>
+					<div class="season-tags">
+						<span th:if="${cloth.spring}">🌸 春</span>
+						<span th:if="${cloth.summer}">☀️ 夏</span>
+						<span th:if="${cloth.autumn}">🍁 秋</span>
+						<span th:if="${cloth.winter}">❄️ 冬</span>
+					</div>
+				</div>
 
-	<p th:if="${cloth.favorite}">
-	⭐ お気に入り登録済み
-	</p>
-	
-	<form
-	    th:if="${cloth.favorite}"
-	    th:action="@{/cloth/unfavorite/{id}(id=${cloth.id})}"
-	    method="post">
+				<p class="status-text" th:if="${cloth.favorite}">
+					⭐ お気に入り登録済み
+				</p>
 
-	    <button type="submit">
-	        💔 お気に入り解除
-	    </button>
+				<p class="status-text" th:if="${cloth.sell}">
+					✅ 売りたいリストに登録済み
+				</p>
 
-	</form>
+				<div class="button-area">
 
-	<form
-	    th:unless="${cloth.favorite}"
-	    th:action="@{/cloth/favorite/{id}(id=${cloth.id})}"
-	    method="post">
+					<form th:if="${cloth.favorite}"
+						  th:action="@{/cloth/unfavorite/{id}(id=${cloth.id})}"
+						  method="post">
+						<button type="submit" class="sub-btn">💔 お気に入り解除</button>
+					</form>
 
-	    <button type="submit">
-	        ❤️ お気に入り登録
-	    </button>
+					<form th:unless="${cloth.favorite}"
+						  th:action="@{/cloth/favorite/{id}(id=${cloth.id})}"
+						  method="post">
+						<button type="submit" class="main-btn">❤️ お気に入り登録</button>
+					</form>
 
-	</form>
-	
-	<!--<p>
-	売りたい状態：
-	<span th:text="${cloth.sell}"></span>
-	</p>-->
+					<form th:if="${!cloth.sell}"
+						  th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
+						  method="post">
+						<button type="submit" class="main-btn">💰 売りたいリストに追加</button>
+					</form>
 
-	<hr>
-	
-	<form 
-		th:if="${!cloth.sell}"
-		th:action="@{/cloth/sell/{id}(id=${cloth.id})}"
-		method="post">
-	
-	<button 
-		type="submit"
-		th:if="${!cloth.sell}">
-		💰 売りたいリストに追加
-	</button>
-	
-	</form>
-	
-	<p th:if="${cloth.sell}">
-		    ✅ 売りたいリストに登録済み
-	</p>
-	
-	<form
-	    th:if="${cloth.sell}"
-	    th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"
-	    method="post">
+					<form th:if="${cloth.sell}"
+						  th:action="@{/cloth/unsell/{id}(id=${cloth.id})}"
+						  method="post">
+						<button type="submit" class="sub-btn">❌ 売りたいリストから外す</button>
+					</form>
 
-	    <button type="submit">
-	        ❌ 売りたいリストから外す
-	    </button>
+					<a href="#" class="edit-link">✏️ 編集</a>
 
-	</form>
+					<form th:action="@{/delete/{id}(id=${cloth.id})}"
+						  method="post"
+						  onsubmit="return confirm('本当に削除しますか？')">
+						<button type="submit" class="delete-btn">🗑️ この服を削除する</button>
+					</form>
 
-	<a href="#">
-	<button>✏️ 編集</button>
-	</a>
+				</div>
 
-	<!--			th:action で指定した削除URLへ method="post"（ポスト送信）する-->
-	<!--th:action のおかげで、ボタン一つ一つに「〇番の服を消してね！」という専用の宛先が書き込まれる。-->
+			</div>
 
-	<form th:action="@{/delete/{id}(id=${cloth.id})}"
-	      method="post"
-	      onsubmit="return confirm('本当に削除しますか？')">
-		 
+		</section>
 
-	    <button type="submit">
-	        🗑️ この服を削除する
-	    </button>
-		
-		<!-- onsubmit="return confirm('本当に削除しますか？')"=はJavaScriptという、
-			ブラウザ側で動く言語のコードconfirm('')：送信ボタンが押された時（onsubmit）」にポップアップを出す
-			ブラウザに「OK」と「キャンセル」のボタンがついた小さな確認ダイアログ表示
-			()のなかはシングルクオーテーション-->
-
-
-	</form>
-
-
-	<br><br>
-
-	<a th:href="@{/cloth}">
-	← 一覧へ戻る
-	</a>
+	</div>
 
 </body>
 </html>

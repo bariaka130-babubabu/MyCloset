@@ -2,6 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/top.css}">
 <title>トップページ</title>
 </head>
 <body>
@@ -9,30 +10,21 @@
 	<h1>MyCloset</h1>
 	<!--display: inline-block: 横幅いっぱいに広がらず
 	中の文字の長さに合わせて自動でコンパクトなサイズに-->
-	<div style="margin: 10px; padding: 8px 15px; 
-	background-color: #fff4f4;border-radius: 8px; display: inline-block;
-	border: 1px solid #ffcccc;">
-		<span style="font-weight: bold;">💰クローゼットの総額</span>
-<!--デザイン: 金額を他の文字より「一回り大きく（1.3em）-->
-		<span style="font-size: 1.3em; color: #ff6b6b; font-weight: bold;" 
-		th:text="${totalPrice}">0</span>
-		<span style="color: #ff6b6b; font-weight: bold; 
-		margin-right: 5px;">円</span>
-		<span style="margin-left: 10px; font-weight: bold; color: #666;">（合計: 
-		<span style="font-size: 1.2em; color: #ff6b6b;"
-		 th:text="${totalCount}">0</span>着）
-		</span>
-		<span style="margin-left: 10px;">
-		     ❤️<span th:text="${favoriteCount}">0</span>着
-		 </span>
+	<div class="closet-summary">
+		<span class="summary-label">💰クローゼットの総額</span>
 
-		 <span style="margin-left: 10px;">
-		     💰 <span th:text="${sellCount}">0</span>点
-		 </span>
-<!--	/total-details というページへのリンクURL作る-->
-<!--underline：下線＝クリックできるのをわかりやすく-->
-		<a th:href="@{/cloth/analyze}" style="margin-left: 15px; font-size: 0.9em;
-		color: #0066cc; text-decoration: underline; font-weight: bold;">詳しく見る</a>
+		<span class="summary-price" th:text="${totalPrice}">0</span>
+		<span>円</span>
+
+		<span>（合計:
+			<span th:text="${totalCount}">0</span>着）
+		</span>
+
+		<span>❤️ <span th:text="${favoriteCount}">0</span>着</span>
+
+		<span>💰 <span th:text="${sellCount}">0</span>点</span>
+
+		<a th:href="@{/cloth/analyze}" class="summary-link">詳しく見る</a>
 	</div>
 	
 	
@@ -50,7 +42,9 @@
 	2つ目の小さな div 箱（th:each がついている方）： 服1着分のデータ（画像など）
 	を1つのセットとして包む箱。服が3着ある＝この小さな箱が3個自動で出来る。-->
 	
-	<div>
+	<section class="closet-section">
+	<div class="section-title">
+		<p class="section-subtitle">My Collection</p>
 		<h2>お洋服一覧</h2>
 <!--		th:each のおかげで、画像とボタンがセットで人数分用意される。-->
 		<div th:each="cloth : ${clothes}">
@@ -73,15 +67,24 @@
 		style="max-width: 200px;" />
 	</a>
 
-	</div></div> <hr />
+			</div>
+		</div>
+	</section>
+	
+	 <hr />
+	
 <!--	 <div> タグは「ただの透明な箱」＝が麺大きくブロック分けしたいとき使う
 	画面のレイアウトを「左側エリア」と「右側エリア」に分けたいときやパーツをグループごとにガバッとまとめて四角い箱に入れたいときに使います-->
 	 
-	<div>
+<section class="form-section">
+	<div class="section-title">
+		<p class="section-subtitle">Search</p>
 		<h2>お洋服を条件で絞り込んで検索する</h2>
+	</div>
 <!--onsubmit="...": 送信ボタンおされたら""の中身を実行してね(HTMLの決まり文句)-->
 <!--return ...：関数の結果(true or false)をここに返してね、という命令(JSの決まり文句)-->
 <!--validateSearchForm()：自由な関数名-->
+<div class="form-card">
 	<form action="/search" method="get" onsubmit="return validateSearchForm()">
 		<p>
 			<label>カテゴリ：</label>
@@ -133,17 +136,20 @@
 			</label>
 		</p>
 					
-		<button type="submit">この条件で検索する</button>
-	</form>
-	</div>
+			<button type="submit">この条件で検索する</button>
+		</form>
+	 </div>
+	</section>
 	
 	
-	
-	
-	 <div>
+	<section class="form-section">
+		<div class="section-title">
+			<p class="section-subtitle">Add Item</p>
 	 	<h2>新しいお洋服を登録する</h2>
+		</div>
 <!--enctype="multipart/form-data" =文字だけじゃなくて画像ファイルも一緒に送る合図-->
 <!--フォーム送信したときに /add というURLへ送る-->
+	<div class="form-card">
 		<form action="/add" method="post" enctype="multipart/form-data">
 <!--	labelタグで囲むことによって入力画面やチェックボックス枠と文字を結び付け、どっちをクリックしても
 		反応するようになる＝人間にとって「押しやすい親切な画面」にするために、文字とボタンをグループ化-->
@@ -216,6 +222,7 @@
 	
 		</form>
 	</div>
+	</section>
 	
 	<script>
 		//function：今から関数を作るというJSの宣言-
