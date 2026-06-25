@@ -72,11 +72,17 @@ public interface ClothMapper {
 	//お気に入りリスト解除
 	void unfavorite(Integer id);
 
+	//お気に入り数カウント
+	Integer getFavoriteCount();
+
 	//売りたいリスト追加
 	void updateSellStatus(Integer id);
 
 	//売りたいリスト解除
 	void unsell(Integer id);
+
+	//売りたいリストカウント
+	Integer getSellCount();
 
 	//コーディネート登録
 }

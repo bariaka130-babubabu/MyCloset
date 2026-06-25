@@ -362,5 +362,18 @@ set is_favorite = false
 where id = #{id}
 </update>
 
+<!-- お気に入り登録数 -->
+<select id="getFavoriteCount" resultType="Integer">
+select count(*)
+from item
+where is_favorite = true
+</select>
+
+<!-- 売りたいリスト登録数 -->
+<select id="getSellCount" resultType="Integer">
+select count(*)
+from item
+where is_sell = true
+</select>
 
 </mapper>

@@ -52,6 +52,13 @@ public class ItemController {
 		}
 		model.addAttribute("totalCount", totalCount);
 
+		// ★お気に入りと総量カウント
+		Integer favoriteCount = mapper.getFavoriteCount();
+		Integer sellCount = mapper.getSellCount();
+
+		model.addAttribute("favoriteCount", favoriteCount);
+		model.addAttribute("sellCount", sellCount);
+
 		return "index";
 	}
 
